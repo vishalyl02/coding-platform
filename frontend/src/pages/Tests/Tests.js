@@ -315,7 +315,7 @@ function Tests() {
     setRunResult("Running...");
 
     try {
-      const res = await fetch("http://localhost:3001/run", {
+      const res = await fetch("https://coding-platform-beige.vercel.app/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -346,7 +346,7 @@ function Tests() {
     setRunResult("Submitting...");
 
     try {
-      const res = await fetch("http://localhost:3001/run", {
+      const res = await fetch("https://coding-platform-beige.vercel.app/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -380,7 +380,7 @@ function Tests() {
     }
 
     try {
-      const res = await fetch("http://localhost:3001/test/submit", {
+      const res = await fetch("https://coding-platform-beige.vercel.app/test/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

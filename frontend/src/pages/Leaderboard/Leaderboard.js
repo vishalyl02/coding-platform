@@ -4,7 +4,7 @@ function Leaderboard() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/leaderboard")
+    fetch("https://coding-platform-beige.vercel.app/leaderboard")
       .then(res => res.json())
       .then(setUsers);
   }, []);
