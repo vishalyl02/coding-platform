@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const res = await fetch(
-        `http://localhost:3001/auth/me/${user.id}`
+        `https://coding-platform-beige.vercel.app/auth/me/${user.id}`
       );
       const data = await res.json();
 

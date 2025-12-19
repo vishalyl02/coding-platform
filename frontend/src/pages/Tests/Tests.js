@@ -283,7 +283,7 @@ function Tests() {
 
       try {
         const res = await fetch(
-          `http://localhost:3001/submission/${user.id}/${activeProblem}`
+          `https://coding-platform-beige.vercel.app/${user.id}/${activeProblem}`
         );
 
         const data = await res.json();
