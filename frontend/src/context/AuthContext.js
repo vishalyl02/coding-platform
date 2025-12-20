@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const res = await fetch(
-        `https://inspection-loop-neck-assuming.trycloudflare.comauth/me/${user.id}`
+        `https://inspection-loop-neck-assuming.trycloudflare.com/auth/me/${user.id}`
       );
       const data = await res.json();
 

@@ -15,7 +15,7 @@ function Register() {
     setSuccess("");
 
     try {
-      const res = await fetch("https://inspection-loop-neck-assuming.trycloudflare.comauth/register", {
+      const res = await fetch("https://inspection-loop-neck-assuming.trycloudflare.com/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
