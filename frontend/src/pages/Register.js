@@ -15,7 +15,7 @@ function Register() {
     setSuccess("");
 
     try {
-      const res = await fetch("http://34.207.145.160:3001/auth/register", {
+      const res = await fetch("https://discrete-performs-citation-disciplines.trycloudflare.com/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

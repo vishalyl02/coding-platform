@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const res = await fetch(
-        `http://34.207.145.160:3001/auth/me/${user.id}`
+        `https://discrete-performs-citation-disciplines.trycloudflare.com/auth/me/${user.id}`
       );
       const data = await res.json();
 

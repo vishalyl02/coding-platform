@@ -41,7 +41,7 @@ function Leaderboard() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch("http://34.207.145.160:3001/leaderboard")
+    fetch("https://discrete-performs-citation-disciplines.trycloudflare.com/leaderboard")
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setUsers(data);

@@ -56,7 +56,7 @@ function Tests() {
 
       try {
         const res = await fetch(
-          `http://34.207.145.160:3001/${user.id}/${activeProblem}`
+          `https://discrete-performs-citation-disciplines.trycloudflare.com/${user.id}/${activeProblem}`
         );
 
         const data = await res.json();
@@ -88,7 +88,7 @@ function Tests() {
     setRunResult("Running...");
 
     try {
-      const res = await fetch("http://34.207.145.160:3001/run", {
+      const res = await fetch("https://discrete-performs-citation-disciplines.trycloudflare.com/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -130,7 +130,7 @@ function Tests() {
     setRunResult("Submitting...");
 
     try {
-      const res = await fetch("http://34.207.145.160:3001/run", {
+      const res = await fetch("https://discrete-performs-citation-disciplines.trycloudflare.com/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -179,7 +179,7 @@ function Tests() {
     if (!confirmSubmit) return;
 
     try {
-      const res = await fetch("http://34.207.145.160:3001/test/submit", {
+      const res = await fetch("https://discrete-performs-citation-disciplines.trycloudflare.com/test/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
