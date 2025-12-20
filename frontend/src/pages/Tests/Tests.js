@@ -56,7 +56,7 @@ function Tests() {
 
       try {
         const res = await fetch(
-          `https://discrete-performs-citation-disciplines.trycloudflare.com/${user.id}/${activeProblem}`
+          `https://inspection-loop-neck-assuming.trycloudflare.com${user.id}/${activeProblem}`
         );
 
         const data = await res.json();
@@ -88,7 +88,7 @@ function Tests() {
     setRunResult("Running...");
 
     try {
-      const res = await fetch("https://discrete-performs-citation-disciplines.trycloudflare.com/run", {
+      const res = await fetch("https://inspection-loop-neck-assuming.trycloudflare.comrun", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -130,7 +130,7 @@ function Tests() {
     setRunResult("Submitting...");
 
     try {
-      const res = await fetch("https://discrete-performs-citation-disciplines.trycloudflare.com/run", {
+      const res = await fetch("https://inspection-loop-neck-assuming.trycloudflare.comrun", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -179,7 +179,7 @@ function Tests() {
     if (!confirmSubmit) return;
 
     try {
-      const res = await fetch("https://discrete-performs-citation-disciplines.trycloudflare.com/test/submit", {
+      const res = await fetch("https://inspection-loop-neck-assuming.trycloudflare.comtest/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
