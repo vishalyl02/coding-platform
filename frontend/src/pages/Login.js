@@ -9,7 +9,7 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const res = await fetch("https://coding-platform-beige.vercel.app/auth/login", {
+    const res = await fetch("http://34.207.145.160:3001/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),

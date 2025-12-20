@@ -153,7 +153,7 @@
 // SUBMISSION FLOW
 const express = require("express");
 const router = express.Router();
-const runJudge = require("../services/judge.service");
+const {runJudge} = require("../services/judge.service");
 const problems = require("../data/problems");
 const User = require("../models/User");
 
@@ -177,7 +177,7 @@ router.post("/", async (req, res) => {
 
   // ---------------- RUN JUDGE ----------------
   console.log("🧪 Running Judge...");
-  const result = runJudge(code, language, testCases);
+  const result = await runJudge(code, language, testCases);
   console.log("🧪 Judge Result:", result);
 
   // ---------------- RUN ONLY ----------------

@@ -1,4 +1,5 @@
 const problemTests = {
+  // ---------------- PROBLEM 1: PREFIX SUM ----------------
   1: [
     {
       input: `5
@@ -13,6 +14,7 @@ const problemTests = {
     }
   ],
 
+  // ---------------- PROBLEM 2: TREE SORTING ----------------
   2: [
     {
       input: `5
@@ -29,6 +31,7 @@ const problemTests = {
     }
   ],
 
+  // ---------------- PROBLEM 3: GRAPH CONNECTIVITY ----------------
   3: [
     {
       input: `4 3
@@ -42,12 +45,9 @@ const problemTests = {
 1 2
 3 4`,
       output: `NO`
-    },
-    {
-      input: `1 0`,
-      output: `YES`
     }
   ]
 };
 
 module.exports = problemTests;
+
