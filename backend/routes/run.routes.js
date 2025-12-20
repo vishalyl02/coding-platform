@@ -1,92 +1,82 @@
 const express = require("express");
 const router = express.Router();
-const {runJudge} = require("../services/judge.service");
-const problems = require("../data/problems");
 const User = require("../models/User");
 
-router.post("/", async (req, res) => {
-  console.log("🔥 /run HIT");
+router.post("/submit", async (req, res) => {
+  console.log("🚀 /test/submit HIT");
   console.log("➡️ BODY:", req.body);
 
-  const { code, problemId, language, userId, submit } = req.body;
+  const { userId, testId } = req.body;
 
-  // ---------------- VALIDATION ----------------
-  if (!code || !problemId || !language) {
-    console.log("❌ INVALID REQUEST");
-    return res.status(400).json({ message: "Invalid request" });
+  if (!userId) {
+    console.log("❌ NO USER ID");
+    return res.status(401).json({ message: "User not logged in" });
   }
 
-  const testCases = problems[problemId];
-  if (!testCases) {
-    console.log("❌ PROBLEM NOT FOUND:", problemId);
-    return res.status(404).json({ message: "Problem not found" });
+  if (!testId) {
+    console.log("❌ NO TEST ID");
+    return res.status(400).json({ message: "Test ID required" });
   }
 
-  // ---------------- RUN JUDGE ----------------
-  console.log("🧪 Running Judge...");
-<<<<<<< HEAD
-  const result = await runJudge(code, language, testCases);
-=======
-const result = await runJudge(code, language, testCases);
-
->>>>>>> 9d169c67397f98911be23ecbc84efdbeb700d23a
-  console.log("🧪 Judge Result:", result);
-
-  // ---------------- RUN ONLY ----------------
-  if (!submit) {
-    return res.json(result);
-  }
-
-  // ---------------- SUBMISSION MODE ----------------
   try {
-    console.log("💾 SUBMISSION MODE");
-    console.log("👤 USER ID:", userId);
-
     const user = await User.findById(userId);
     if (!user) {
       console.log("❌ USER NOT FOUND");
-      return res.status(401).json({ message: "User not logged in" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("👤 USER FOUND:", user.username);
+    // Check if test already submitted
+    if (user.isTestSubmitted(testId)) {
+      console.log("⚠️ TEST ALREADY SUBMITTED");
+      return res.status(400).json({ 
+        message: "Test already submitted",
+        alreadySubmitted: true 
+      });
+    }
 
-    // 🔒 SAFE SCORE HANDLING
-    const prevScore = Number(user.problemScores?.get(String(problemId)) || 0);
-    const rawScore = result.success
-  ? Math.floor((result.passed / result.total) * 100)
-  : 0;
+    // Calculate score for this test (you can customize this logic)
+    const testScore = user.totalScore; // Or calculate based on test-specific problems
 
-    const safeScore = Number.isFinite(rawScore) ? rawScore : 0;
-    const newScore = Math.max(prevScore, safeScore);
-
-    console.log("📊 prevScore:", prevScore);
-    console.log("📊 rawScore:", rawScore);
-    console.log("📊 newScore:", newScore);
-
-    user.problemScores.set(String(problemId), newScore);
-
-    user.totalScore = Array.from(user.problemScores.values()).reduce(
-      (sum, val) => sum + Number(val || 0),
-      0
-    );
-
-    user.lastSubmissionAt = new Date();
-
+    // Submit the test
+    user.submitTest(testId, testScore);
     await user.save();
 
-    console.log("✅ USER UPDATED");
-    console.log("📊 problemScores:", user.problemScores);
-    console.log("🏆 totalScore:", user.totalScore);
+    console.log(`✅ TEST ${testId} MARKED AS SUBMITTED`);
+    console.log("👤 USER:", user.username);
 
-    return res.json({
-      ...result,
-      score: newScore,
-      message: "Submission saved successfully ✅",
+    res.json({ 
+      success: true,
+      testId: testId,
+      score: testScore 
     });
-
   } catch (err) {
-    console.error("🔥 SUBMISSION ERROR:", err);
-    return res.status(500).json({ message: "Server error" });
+    console.error("🔥 TEST SUBMIT ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// 🔥 NEW: Get test submission status
+router.get("/status/:userId/:testId", async (req, res) => {
+  try {
+    const { userId, testId } = req.params;
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const submission = user.testSubmissions.find(
+      sub => sub.testId === testId
+    );
+
+    res.json({
+      submitted: submission?.submitted || false,
+      submittedAt: submission?.submittedAt,
+      score: submission?.score || 0,
+    });
+  } catch (err) {
+    console.error("🔥 TEST STATUS ERROR:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 

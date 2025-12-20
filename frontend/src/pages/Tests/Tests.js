@@ -1,9 +1,10 @@
-import { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { problems } from "./problems";
-import { languageTemplates } from "./languageTemplates";
+import { allTests } from "./allTestProblems";
 import { useTestTimer } from "./useTestTimer";
+import { useTestState } from "./useTestState";
+import { useCodeActions } from "./useCodeActions";
 
 import TestHeader from "./TestHeader";
 import ProblemList from "./ProblemList";
@@ -15,228 +16,252 @@ import { AuthContext } from "../../context/AuthContext";
 import "./Tests.css";
 
 function Tests() {
-  /* -------------------- CONTEXT -------------------- */
-
+  /* -------------------- ROUTING & AUTH -------------------- */
+  const { testId } = useParams();
   const navigate = useNavigate();
   const { user, refreshUser } = useContext(AuthContext);
 
-  console.log("USER FROM CONTEXT:", user);
+  // Get userId (could be .id or ._id)
+  const userId = user?.id || user?._id;
 
-  /* -------------------- STATE -------------------- */
-  const [testStarted, setTestStarted] = useState(false);
-  const [testSubmitted, setTestSubmitted] = useState(false);
+  // 🔍 DEBUG: Log user state
+  console.log("🔍 Tests.js - Component Render:", {
+    testId,
+    userId: userId,
+    username: user?.username,
+    userExists: !!user,
+    userObject: user,
+    timestamp: new Date().toISOString()
+  });
 
-  const [activeProblem, setActiveProblem] = useState(1);
-  const [solved, setSolved] = useState({});
+  // 🔍 DEBUG: Track user changes
+  useEffect(() => {
+    console.log("👤 User changed:", {
+      userId: userId,
+      username: user?.username,
+      userExists: !!user,
+      fullUser: user
+    });
+  }, [user, userId]);
 
-  const [language, setLanguage] = useState("cpp");
-  const [code, setCode] = useState(languageTemplates.cpp);
-  const [runResult, setRunResult] = useState("");
-  const [score, setScore] = useState(0);
+  // 🔍 DEBUG: Track testId changes
+  useEffect(() => {
+    console.log("📝 TestId changed:", testId);
+  }, [testId]);
 
-  /* -------------------- TIMER -------------------- */
+  /* -------------------- CUSTOM HOOKS -------------------- */
+  // Test state management with persistence
+  const {
+    testStarted,
+    testSubmitted,
+    isLoading,
+    activeProblem,
+    setActiveProblem,
+    solved,
+    markProblemSolved,
+    startTest,
+    submitTest,
+  } = useTestState(testId, userId);
+
+  // Code editor and execution
+  const {
+    language,
+    setLanguage,
+    code,
+    setCode,
+    runResult,
+    score,
+    runCode,
+    submitCode,
+  } = useCodeActions(userId, activeProblem, testStarted, testSubmitted);
+
+  // Timer with persistence
   const { formatTime } = useTestTimer(
     testStarted,
     testSubmitted,
-    90 * 60 // 90 minutes
+    90 * 60, // 90 minutes in seconds
+    testId
   );
 
-  /* -------------------- CHECK IF TEST ALREADY SUBMITTED -------------------- */
-  useEffect(() => {
-    if (user?.testSubmitted) {
-      // Redirect to thank you page if test already submitted
-      navigate("/tests/thank-you");
-    }
-  }, [user, navigate]);
+  /* -------------------- DATA -------------------- */
+  // Get problems for this specific test
+  const problems = allTests[testId] || allTests[1];
 
-  /* -------------------- LOAD SAVED CODE PER PROBLEM -------------------- */
-  useEffect(() => {
-    const fetchSavedCode = async () => {
-      if (!user?.id) return;
-
-      try {
-        const res = await fetch(
-          `https://inspection-loop-neck-assuming.trycloudflare.com/${user.id}/${activeProblem}`
-        );
-
-        const data = await res.json();
-
-        if (data?.code) {
-          setCode(data.code);
-          setLanguage(data.language || "cpp");
-        } else {
-          setCode(languageTemplates[language]);
-        }
-      } catch (err) {
-        console.error("Failed to load saved code", err);
-        setCode(languageTemplates[language]);
-      }
-    };
-
-    fetchSavedCode();
-  }, [activeProblem, user, language]);
-
-  /* -------------------- RUN CODE -------------------- */
-  const runCode = async () => {
-    if (!testStarted || testSubmitted) return;
-
-    if (!code.trim()) {
-      setRunResult("Please write some code ❌");
-      return;
-    }
-
-    setRunResult("Running...");
-
-    try {
-      const res = await fetch("https://inspection-loop-neck-assuming.trycloudflare.com/run", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code,
-          problemId: activeProblem,
-          language,
-          userId: user.id,
-        }),
-      });
-
-      const data = await res.json();
-      if (!data.success) {
-        setRunResult("❌ Runtime / Compilation Error");
-        return;
-      }
-      
-      setRunResult(`
-      Verdict: ${data.verdict}
-      Passed: ${data.passed}/${data.total}
-      `);
-      
-      setScore(Math.floor((data.passed / data.total) * 100));
-      
-      setScore(data.score || 0);
-    } catch {
-      setRunResult("Failed to connect to backend ❌");
-    }
-  };
-
-  /* -------------------- SUBMIT CODE (PER PROBLEM) -------------------- */
-  const submitCode = async () => {
-    if (!testStarted || testSubmitted) return;
-
-    if (!code.trim()) {
-      setRunResult("Please write some code ❌");
-      return;
-    }
-
-    setRunResult("Submitting...");
-
-    try {
-      const res = await fetch("https://inspection-loop-neck-assuming.trycloudflare.com/run", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code,
-          problemId: activeProblem,
-          language,
-          userId: user.id,
-          submit: true,
-        }),
-      });
-
-      const data = await res.json();
-      if (!data.success) {
-        setRunResult("❌ Submission Failed");
-        return;
-      }
-      
-      setRunResult(`
-      ✅ Submitted Successfully
-      Verdict: ${data.verdict}
-      Score: ${data.score}
-      `);
-      
-      if (data.verdict === "AC") {
-        setSolved((prev) => ({
-          ...prev,
-          [activeProblem]: true,
-        }));
-      }
-    } catch {
-      setRunResult("Failed to connect to backend ❌");
-    }
-  };
-
-  /* -------------------- SUBMIT ENTIRE TEST -------------------- */
+  /* -------------------- HANDLERS -------------------- */
+  // Handle full test submission
   const handleSubmitTest = async () => {
-    if (!user?.id) {
-      alert("User not logged in");
+    console.log("🚀 handleSubmitTest called");
+    console.log("🔍 User before submit:", {
+      userId: userId,
+      username: user?.username,
+      userExists: !!user,
+      fullUser: user
+    });
+
+    // Double check user is logged in
+    if (!userId) {
+      console.error("❌ No userId available at submit time");
+      alert("Session expired. Please log in again.");
+      navigate("/login");
       return;
     }
 
-    const confirmSubmit = window.confirm(
-      "Are you sure you want to submit the test? You cannot make changes after submission."
-    );
-
-    if (!confirmSubmit) return;
-
     try {
-      const res = await fetch("https://inspection-loop-neck-assuming.trycloudflare.com/test/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user.id,
-        }),
+      console.log("📤 Calling submitTest...");
+      const success = await submitTest();
+      
+      console.log("✅ submitTest result:", success);
+      console.log("🔍 User after submit:", {
+        userId: userId,
+        username: user?.username,
+        userExists: !!user,
+        fullUser: user
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Submission failed");
-        return;
+      if (success) {
+        console.log("🎉 Test submitted successfully, navigating...");
+        
+        // Navigate to thank you page
+        navigate("/tests/thank-you");
+        
+        console.log("🔍 User after navigate:", {
+          userId: userId,
+          username: user?.username,
+          userExists: !!user,
+          fullUser: user
+        });
+        
+        // Refresh user data AFTER navigation (in background)
+        setTimeout(() => {
+          console.log("🔄 Starting background refresh...");
+          console.log("🔍 User before refresh:", {
+            userId: userId,
+            username: user?.username,
+            userExists: !!user,
+            fullUser: user
+          });
+          
+          refreshUser().then(() => {
+            console.log("✅ Background refresh completed");
+          }).catch(err => {
+            console.error("❌ Background refresh failed:", err);
+          });
+        }, 100);
       }
-      
-      await refreshUser(); // This updates user.testSubmitted to true
-      setTestSubmitted(true);
-      navigate("/tests/thank-you");
     } catch (err) {
-      console.error(err);
-      alert("Server error");
+      console.error("❌ Test submission error:", err);
+      
+      // Handle specific error messages
+      if (err.message === "User not logged in") {
+        alert("Your session has expired. Please log in again.");
+        navigate("/login");
+      } else {
+        alert(err.message || "Server error during submission");
+      }
     }
   };
 
-  /* -------------------- PREVENT ACCESS IF TEST SUBMITTED -------------------- */
-  if (user?.testSubmitted) {
+  // Handle individual code submission
+  const handleCodeSubmit = async () => {
+    await submitCode(markProblemSolved);
+  };
+
+  /* -------------------- LOADING STATE -------------------- */
+  // Show loading while checking user auth OR test state
+  if (isLoading || user === undefined) {
+    console.log("⏳ Loading state:", { isLoading, userUndefined: user === undefined });
     return (
-      <div className="test-container" style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-        <div style={{ textAlign: "center" }}>
-          <h2>✅ Test Already Submitted</h2>
-          <p>You have already submitted this test.</p>
-          <button 
-            className="solve-btn" 
-            onClick={() => navigate("/tests/thank-you")}
-            style={{ marginTop: "20px" }}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          fontSize: "1.5rem",
+          color: "#666",
+        }}
+      >
+        Loading test data...
+      </div>
+    );
+  }
+
+  /* -------------------- AUTH CHECK -------------------- */
+  if (!user) {
+    console.log("❌ No user, showing login prompt");
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          flexDirection: "column",
+          gap: "20px",
+        }}
+      >
+        <h2>Please Log In</h2>
+        <p>You need to be logged in to access tests.</p>
+        <button
+          className="solve-btn"
+          onClick={() => navigate("/login")}
+          style={{ padding: "10px 30px" }}
+        >
+          Go to Login
+        </button>
+      </div>
+    );
+  }
+
+  /* -------------------- TEST ALREADY SUBMITTED -------------------- */
+  if (testSubmitted) {
+    console.log("✅ Test already submitted");
+    return (
+      <div
+        className="test-container"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <div style={{ textAlign: "center", maxWidth: "500px" }}>
+          <h2 style={{ fontSize: "2rem", marginBottom: "20px" }}>
+            ✅ Test Already Submitted
+          </h2>
+          <p style={{ fontSize: "1.2rem", color: "#666", marginBottom: "30px" }}>
+            You have already submitted Test {testId}. You cannot make any further changes.
+          </p>
+          <button
+            className="solve-btn"
+            onClick={() => navigate("/tests")}
+            style={{ padding: "12px 40px", fontSize: "1rem" }}
           >
-            View Results
+            Back to Tests
           </button>
         </div>
       </div>
     );
   }
 
-  /* -------------------- RENDER -------------------- */
+  console.log("✅ Rendering main test interface");
+
+  /* -------------------- MAIN TEST INTERFACE -------------------- */
   return (
     <div className="test-container">
-      {/* HEADER */}
+      {/* HEADER WITH TIMER AND SUBMIT */}
       <TestHeader
         formatTime={formatTime}
         testStarted={testStarted}
         testSubmitted={testSubmitted}
-        onStart={() => setTestStarted(true)}
+        onStart={startTest}
         onSubmit={handleSubmitTest}
       />
 
-      {/* PANELS */}
+      {/* THREE PANEL LAYOUT */}
       <div className="test-panels">
-        {/* LEFT */}
+        {/* LEFT PANEL - Problem List */}
         <ProblemList
           problems={problems}
           activeProblem={activeProblem}
@@ -244,17 +269,17 @@ function Tests() {
           onSelect={setActiveProblem}
         />
 
-        {/* CENTER */}
+        {/* CENTER PANEL - Problem Description */}
         <QuestionPanel problem={problems[activeProblem - 1]} />
 
-        {/* RIGHT */}
+        {/* RIGHT PANEL - Code Editor */}
         <IDEPanel
           code={code}
           setCode={setCode}
           testStarted={testStarted}
           testSubmitted={testSubmitted}
           onRunCode={runCode}
-          onSubmitCode={submitCode}
+          onSubmitCode={handleCodeSubmit}
           runResult={runResult}
           language={language}
           setLanguage={setLanguage}

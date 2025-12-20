@@ -37,3 +37,44 @@ exports.login = async (req, res) => {
     },
   });
 };
+
+/* -------- GET USER BY ID (for refreshUser) -------- */
+exports.getUserById = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    console.log("📥 GET /auth/me/:userId called with:", userId);
+
+    if (!userId) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "User ID is required" 
+      });
+    }
+
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      console.log("❌ User not found:", userId);
+      return res.status(404).json({ 
+        success: false, 
+        message: "User not found" 
+      });
+    }
+
+    console.log("✅ User found:", { id: user._id, username: user.username });
+
+    res.json({
+      id: user._id,
+      username: user.username,
+      // Add any other user fields you need
+    });
+  } catch (err) {
+    console.error("❌ Error in getUserById:", err);
+    res.status(500).json({ 
+      success: false, 
+      message: "Server error",
+      error: err.message 
+    });
+  }
+};

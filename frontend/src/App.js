@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
+import TestsLanding from './pages/Tests/TestsLanding';
 import Home from "./pages/Home";
 import IDE from "./pages/IDE";
 import Tests from "./pages/Tests/Tests";
@@ -22,7 +23,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/ide" element={<IDE />} />
-        <Route path="/tests" element={<Tests />} />
+        <Route path="/tests" element={<TestsLanding />} />
+<Route path="/tests/:testId" element={<Tests />} />
         <Route path="/tests/thank-you" element={<ThankYou />} />
         <Route path="/register" element={<Register />} />
         <Route path="/questions" element={<Questions />} />

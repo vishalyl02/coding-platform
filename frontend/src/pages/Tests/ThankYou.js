@@ -1,26 +1,34 @@
+import { useNavigate } from "react-router-dom";
+import "./ThankYou.css";
+
 function ThankYou() {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          background: "#f9fafb",
-          fontFamily: "Inter, sans-serif",
-        }}
-      >
-        <h1 style={{ fontSize: "32px", color: "#111827" }}>
-          🎉 Thank You for the Test
-        </h1>
-  
-        <p style={{ marginTop: "12px", color: "#6b7280" }}>
-          Your test has been successfully submitted.
-        </p>
+  const navigate = useNavigate();
+
+  return (
+    <div className="thank-you-container">
+      <div className="thank-you-card">
+        <div className="success-icon">✅</div>
+        <h1>Test Submitted Successfully!</h1>
+        <p>Thank you for completing the test.</p>
+        <p>Your responses have been recorded.</p>
+        
+        <div className="action-buttons">
+          <button
+            className="primary-btn"
+            onClick={() => navigate("/tests")}
+          >
+            Back to Tests
+          </button>
+          <button
+            className="secondary-btn"
+            onClick={() => navigate("/leaderboard")}
+          >
+            View Leaderboard
+          </button>
+        </div>
       </div>
-    );
-  }
-  
-  export default ThankYou;
-  
+    </div>
+  );
+}
+
+export default ThankYou;
