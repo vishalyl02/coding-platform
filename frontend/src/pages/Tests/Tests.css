@@ -43,6 +43,8 @@
 
 /* LEFT PANEL */
 .problem-panel-left {
+  padding-top: 50px;
+  margin-top:20px;
   width: 180px;
 }
 
@@ -74,7 +76,7 @@
 }
 
 .question-panel h3 {
-  margin-top: 0;
+  margin-top: 20px;
   margin-bottom: 8px;
   font-size: 16px;
   color: #0f172a;
@@ -93,6 +95,7 @@
 
 /* IDE PANEL */
 .ide-panel {
+  margin-top:20px;
   width: 35%;
   display: flex;
   flex-direction: column;
