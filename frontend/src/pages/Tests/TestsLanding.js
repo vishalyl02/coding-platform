@@ -97,13 +97,13 @@ function TestsLanding() {
                 <p className="test-card-description">{test.description}</p>
                 
                 <div className="test-meta">
-                  <div className="test-meta-item">
+                  {/* <div className="test-meta-item">
                     <svg className="test-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <circle cx="12" cy="12" r="10"></circle>
                       <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
                     <span>{test.duration}</span>
-                  </div>
+                  </div> */}
                   <div className="test-meta-item">
                     <svg className="test-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
