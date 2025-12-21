@@ -18,9 +18,9 @@ function Navbar() {
 
       <div className="navbar-right">
         <Link to="/">Home</Link>
-        <Link to="/ide">IDE</Link>
+        {/* <Link to="/ide">IDE</Link> */}
         <Link to="/tests">Tests</Link>
-        <Link to="/questions">Questions</Link>
+        {/* <Link to="/questions">Questions</Link> */}
 
         {user && (
   <Link

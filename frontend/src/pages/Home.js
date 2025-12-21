@@ -10,8 +10,8 @@ function Home() {
         </p>
   
         <div className="hero-actions">
-          <a href="/ide">Try IDE</a>
-          <a href="/questions">Solve Problems</a>
+          {/* <a href="/ide">Try IDE</a>
+          <a href="/questions">Solve Problems</a> */}
         </div>
       </div>
     );
