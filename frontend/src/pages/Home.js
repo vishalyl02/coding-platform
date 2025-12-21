@@ -72,7 +72,7 @@ function Home() {
               <div className="home-btn-gradient"></div>
             </Link>
             
-            <Link to="/leaderboard" className="home-btn-secondary">
+            {/* <Link to="/leaderboard" className="home-btn-secondary">
               <svg className="home-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M6 9H4.5a2.5 2.5 0 010-5H6"></path>
                 <path d="M18 9h1.5a2.5 2.5 0 000-5H18"></path>
@@ -82,7 +82,7 @@ function Home() {
                 <path d="M18 2H6v7a6 6 0 0012 0V2z"></path>
               </svg>
               <span>View Leaderboard</span>
-            </Link>
+            </Link> */}
           </div>
 
           {/* Feature Cards */}
