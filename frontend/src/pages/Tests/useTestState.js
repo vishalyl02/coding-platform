@@ -1,4 +1,4 @@
-// useTestState.js - Manages all test state and persistence (FINAL VERSION)
+// useTestState.js - Manages all test state and persistence (UPDATED WITH PERSISTENCE)
 import { useState, useEffect, useRef } from "react";
 
 const API_URL = "https://inspection-loop-neck-assuming.trycloudflare.com";
@@ -76,6 +76,30 @@ export function useTestState(testId, userId) {
           console.warn("Failed to fetch test status, continuing with localStorage");
         }
 
+        // 🔥 NEW: Load solved problems from backend
+        try {
+          const solvedRes = await fetch(
+            `${API_URL}/test/solved-problems/${userId}/${testId}`
+          );
+          
+          if (solvedRes.ok) {
+            const solvedData = await solvedRes.json();
+            
+            if (solvedData.success && solvedData.solved) {
+              // Convert array to object for easy lookup
+              const solvedMap = {};
+              solvedData.solved.forEach(item => {
+                solvedMap[item.problemId] = true;
+              });
+              
+              console.log("✅ Loaded solved problems from backend:", solvedMap);
+              setSolved(solvedMap);
+            }
+          }
+        } catch (solvedErr) {
+          console.warn("Failed to load solved problems from backend, using localStorage");
+        }
+
         // Load saved state from localStorage
         const savedStarted = localStorage.getItem(`test_${testId}_started`);
         const savedProblem = localStorage.getItem(`test_${testId}_activeProblem`);
@@ -91,12 +115,13 @@ export function useTestState(testId, userId) {
           setActiveProblem(parseInt(savedProblem));
         }
         
+        // 🔥 UPDATED: Merge localStorage solved with backend solved
         if (savedSolved) {
           try {
-            setSolved(JSON.parse(savedSolved));
+            const localSolved = JSON.parse(savedSolved);
+            setSolved(prev => ({ ...prev, ...localSolved }));
           } catch (e) {
             console.error("Failed to parse solved problems:", e);
-            setSolved({});
           }
         }
 

@@ -23,7 +23,7 @@ function Tests() {
 
   // Get userId (could be .id or ._id)
   const userId = user?.id || user?._id;
-
+  const totalTestScore = user?.totalScore || 0;
   // 🔍 DEBUG: Log user state
   console.log("🔍 Tests.js - Component Render:", {
     testId,
@@ -63,7 +63,8 @@ function Tests() {
     submitTest,
   } = useTestState(testId, userId);
 
-  // Code editor and execution
+  // 🔥 UPDATED: Pass testId to useCodeActions
+  // Code editor and execution with auto-save
   const {
     language,
     setLanguage,
@@ -73,7 +74,7 @@ function Tests() {
     score,
     runCode,
     submitCode,
-  } = useCodeActions(userId, activeProblem, testStarted, testSubmitted);
+  } = useCodeActions(userId, activeProblem, testStarted, testSubmitted, testId);
 
   // Timer with persistence
   const { formatTime } = useTestTimer(
@@ -272,20 +273,25 @@ function Tests() {
         {/* CENTER PANEL - Problem Description */}
         <QuestionPanel problem={problems[activeProblem - 1]} />
 
-        {/* RIGHT PANEL - Code Editor */}
+
+    
         <IDEPanel
-          code={code}
-          setCode={setCode}
-          testStarted={testStarted}
-          testSubmitted={testSubmitted}
-          onRunCode={runCode}
-          onSubmitCode={handleCodeSubmit}
-          runResult={runResult}
-          language={language}
-          setLanguage={setLanguage}
-          score={score}
-        />
-      </div>
+  code={code}
+  setCode={setCode}
+  testStarted={testStarted}
+  testSubmitted={testSubmitted}
+  onRunCode={runCode}
+  onSubmitCode={handleCodeSubmit}
+  runResult={runResult}
+  language={language}
+  setLanguage={setLanguage}
+  score={score}
+  totalTestScore={totalTestScore}
+  problem={problems[activeProblem - 1]}
+  testId={testId}
+  userId={userId}  // 🔥 ADD THIS LINE
+/>
+    </div>
     </div>
   );
 }

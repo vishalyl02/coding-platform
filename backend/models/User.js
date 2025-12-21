@@ -8,7 +8,16 @@ const SubmissionSchema = new mongoose.Schema({
   submittedAt: Date,
 });
 
-// 🔥 NEW: Track each test submission separately
+const CodeSaveSchema = new mongoose.Schema({
+  testId: { type: String, required: true },
+  problemId: { type: String, required: true },
+  code: { type: String, default: "" },
+  language: { type: String, default: "cpp" },
+  lastSavedAt: { type: Date, default: Date.now },
+  solved: { type: Boolean, default: false },
+  bestScore: { type: Number, default: 0 }
+});
+
 const TestSubmissionSchema = new mongoose.Schema({
   testId: { type: String, required: true },
   submitted: { type: Boolean, default: false },
@@ -19,42 +28,30 @@ const TestSubmissionSchema = new mongoose.Schema({
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-
-  // Problem scores (per problem)
   problemScores: {
     type: Map,
     of: Number,
     default: () => new Map(),
   },
-
-  // All submissions
   submissions: {
     type: [SubmissionSchema],
     default: [],
   },
-
-  // Total score across all problems
   totalScore: {
     type: Number,
     default: 0,
   },
-
-  // 🔥 NEW: Track test submissions per test
+  codeSaves: {
+    type: [CodeSaveSchema],
+    default: [],
+  },
   testSubmissions: {
     type: [TestSubmissionSchema],
     default: [],
   },
-
-  // 🔥 DEPRECATED: Remove this after migration
-  // testSubmitted: {
-  //   type: Boolean,
-  //   default: false,
-  // },
-
   lastSubmissionAt: Date,
 });
 
-// Helper method to check if a specific test is submitted
 UserSchema.methods.isTestSubmitted = function(testId) {
   const submission = this.testSubmissions.find(
     sub => sub.testId === testId.toString()
@@ -62,7 +59,6 @@ UserSchema.methods.isTestSubmitted = function(testId) {
   return submission?.submitted || false;
 };
 
-// Helper method to submit a test
 UserSchema.methods.submitTest = function(testId, score = 0) {
   const existingIndex = this.testSubmissions.findIndex(
     sub => sub.testId === testId.toString()
@@ -82,6 +78,68 @@ UserSchema.methods.submitTest = function(testId, score = 0) {
   }
 
   this.lastSubmissionAt = new Date();
+  this.markModified('testSubmissions');
+};
+
+UserSchema.methods.getSavedCode = function(testId, problemId) {
+  const save = this.codeSaves.find(
+    s => s.testId === testId.toString() && s.problemId === problemId.toString()
+  );
+  return save || null;
+};
+
+UserSchema.methods.saveCode = function(testId, problemId, code, language) {
+  const existingIndex = this.codeSaves.findIndex(
+    s => s.testId === testId.toString() && s.problemId === problemId.toString()
+  );
+
+  if (existingIndex >= 0) {
+    this.codeSaves[existingIndex].code = code;
+    this.codeSaves[existingIndex].language = language;
+    this.codeSaves[existingIndex].lastSavedAt = new Date();
+  } else {
+    this.codeSaves.push({
+      testId: testId.toString(),
+      problemId: problemId.toString(),
+      code: code,
+      language: language,
+      lastSavedAt: new Date(),
+      solved: false,
+      bestScore: 0
+    });
+  }
+  
+  // 🔥 CRITICAL FIX: Mark array as modified
+  this.markModified('codeSaves');
+};
+
+UserSchema.methods.updateProblemScore = function(testId, problemId, newScore) {
+  const existingIndex = this.codeSaves.findIndex(
+    s => s.testId === testId.toString() && s.problemId === problemId.toString()
+  );
+
+  if (existingIndex >= 0) {
+    const currentBest = this.codeSaves[existingIndex].bestScore || 0;
+    if (newScore > currentBest) {
+      this.codeSaves[existingIndex].bestScore = newScore;
+      this.codeSaves[existingIndex].solved = newScore === 100;
+      this.markModified('codeSaves'); // 🔥 CRITICAL FIX
+      return true;
+    }
+    return false;
+  } else {
+    this.codeSaves.push({
+      testId: testId.toString(),
+      problemId: problemId.toString(),
+      code: "",
+      language: "cpp",
+      lastSavedAt: new Date(),
+      solved: newScore === 100,
+      bestScore: newScore
+    });
+    this.markModified('codeSaves'); // 🔥 CRITICAL FIX
+    return true;
+  }
 };
 
 module.exports = mongoose.model("User", UserSchema);

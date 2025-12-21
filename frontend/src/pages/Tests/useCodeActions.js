@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { languageTemplates } from "./languageTemplates";
 
-// 🔥 API URL - Update this when tunnel URL changes
+// 🔥 API URL - Make sure this is correct with no trailing slash
 const API_URL = "https://inspection-loop-neck-assuming.trycloudflare.com";
 
-export function useCodeActions(userId, activeProblem, testStarted, testSubmitted) {
-  /* -------------------- STATE -------------------- */
+export function useCodeActions(userId, activeProblem, testStarted, testSubmitted, testId) {
+  /* ==================== STATE ==================== */
   const [language, setLanguage] = useState("cpp");
   const [code, setCode] = useState(languageTemplates.cpp);
   const [runResult, setRunResult] = useState("");
@@ -13,204 +13,412 @@ export function useCodeActions(userId, activeProblem, testStarted, testSubmitted
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  /* -------------------- LOAD SAVED CODE -------------------- */
+  /* ==================== AUTO-SAVE CODE EVERY 5 SECONDS ==================== */
   useEffect(() => {
-    // Don't fetch if userId is not available yet
-    if (userId === undefined || userId === null) {
+    // Don't auto-save if test is not active
+    if (!userId || !testStarted || testSubmitted || !testId) {
+      return;
+    }
+
+    const autoSaveInterval = setInterval(async () => {
+      try {
+        console.log("💾 Auto-saving code...");
+        
+        const response = await fetch(`${API_URL}/test/save-code`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            testId,
+            problemId: activeProblem,
+            code,
+            language
+          })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          console.log("✅ Code auto-saved at", new Date().toLocaleTimeString());
+        } else {
+          console.warn("⚠️ Auto-save warning:", data.error);
+        }
+      } catch (error) {
+        console.error("❌ Auto-save failed:", error);
+      }
+    }, 5000); // Save every 5 seconds
+
+    return () => clearInterval(autoSaveInterval);
+  }, [userId, testId, activeProblem, code, language, testStarted, testSubmitted]);
+
+  /* ==================== LOAD SAVED CODE WHEN SWITCHING PROBLEMS ==================== */
+  useEffect(() => {
+    // Reset to template if no user or test
+    if (!userId || !testId) {
       setCode(languageTemplates[language]);
+      setScore(0);
       return;
     }
 
     const fetchSavedCode = async () => {
       try {
-        const res = await fetch(
-          `${API_URL}/saved-code/${userId}/${activeProblem}`
+        console.log(`📂 Loading saved code for Problem ${activeProblem}...`);
+        
+        const response = await fetch(
+          `${API_URL}/test/saved-code/${userId}/${activeProblem}?testId=${testId}`
         );
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch saved code");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await res.json();
+        const data = await response.json();
 
-        if (data?.code) {
-          // Load saved code and language
+        if (data.success && data.code) {
+          console.log("✅ Loaded saved code:", {
+            codeLength: data.code.length,
+            language: data.language,
+            solved: data.solved,
+            bestScore: data.bestScore
+          });
+          
           setCode(data.code);
           setLanguage(data.language || "cpp");
+          setScore(data.bestScore || 0);
         } else {
           // No saved code, use template
+          console.log("📝 No saved code found, using template");
           setCode(languageTemplates[language]);
+          setScore(0);
         }
-      } catch (err) {
-        console.error("Failed to load saved code:", err);
-        // Fallback to template on error
+      } catch (error) {
+        console.error("❌ Failed to load saved code:", error);
         setCode(languageTemplates[language]);
+        setScore(0);
       }
     };
 
     fetchSavedCode();
-  }, [activeProblem, userId, language]);
+  }, [activeProblem, userId, testId]); // Intentionally not including 'language'
 
-  /* -------------------- RUN CODE -------------------- */
+  /* ==================== RUN CODE ==================== */
   const runCode = async () => {
-    // Validate user is logged in
+    console.log("🔵 [runCode] Function called");
+    console.log("🔍 [runCode] State check:", {
+      userId,
+      testStarted,
+      testSubmitted,
+      activeProblem,
+      language,
+      codeLength: code?.length,
+      isRunning,
+      isSubmitting,
+      testId
+    });
+
+    // Validation checks
     if (!userId) {
-      setRunResult("❌ User not logged in. Please refresh the page.");
+      console.log("❌ [runCode] Validation failed: No userId");
+      setRunResult("❌ Error: User not logged in. Please refresh the page.");
       return;
     }
 
-    // Validate conditions
     if (!testStarted || testSubmitted) {
-      setRunResult("⚠️ Test is not active");
+      console.log("❌ [runCode] Validation failed: Test not active", { testStarted, testSubmitted });
+      setRunResult("⚠️ Test is not active. Cannot run code.");
       return;
     }
 
     if (!code.trim()) {
-      setRunResult("❌ Please write some code before running");
+      console.log("❌ [runCode] Validation failed: No code");
+      setRunResult("❌ Please write some code before running.");
       return;
     }
 
     if (isRunning || isSubmitting) {
-      return; // Prevent multiple simultaneous requests
+      console.log("⚠️ [runCode] Already running/submitting, skipping");
+      return; // Prevent concurrent requests
     }
 
     setIsRunning(true);
     setRunResult("⏳ Running your code...");
 
+    const requestBody = {
+      code,
+      problemId: activeProblem,
+      language,
+      userId,
+      submit: false,
+      testId
+    };
+
+    console.log("📦 [runCode] Request payload:", requestBody);
+    console.log("🌐 [runCode] API_URL:", API_URL);
+    console.log("🔗 [runCode] Full URL:", `${API_URL}/run`);
+
     try {
-      const res = await fetch(`${API_URL}/run`, {
+      console.log("🚀 [runCode] Sending fetch request...");
+      
+      const response = await fetch(`${API_URL}/run`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code,
-          problemId: activeProblem,
-          language,
-          userId: userId,
-          submit: false, // This is just a test run
-        }),
+        headers: { 
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(requestBody)
       });
 
-      if (!res.ok) {
-        throw new Error("Server error");
+      console.log("📡 [runCode] Response received:", {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        url: response.url
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("❌ [runCode] Server returned error:", errorText);
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
       }
 
-      const data = await res.json();
+      const data = await response.json();
+      console.log("📊 [runCode] Response data:", data);
 
       if (!data.success) {
-        setRunResult("❌ Runtime / Compilation Error\n\n" + (data.error || ""));
+        console.log("⚠️ [runCode] Code execution failed:", data);
+        setRunResult(
+          `❌ Runtime / Compilation Error\n\n${data.error || data.message || "Unknown error occurred"}`
+        );
         setScore(0);
         return;
       }
 
-      // Display results
-      setRunResult(`
-✅ Code Executed Successfully
-
-Verdict: ${data.verdict}
-Test Cases Passed: ${data.passed}/${data.total}
-${data.message ? '\n' + data.message : ''}
-      `.trim());
-
       // Calculate score
       const calculatedScore = data.score || Math.floor((data.passed / data.total) * 100);
+      console.log("💯 [runCode] Calculated score:", calculatedScore);
+      
+      // Display results
+      const resultMessage = `
+✅ Code Executed Successfully
+
+Verdict: ${data.verdict || "N/A"}
+Test Cases Passed: ${data.passed || 0}/${data.total || 0}
+Score: ${calculatedScore}/100
+${data.message ? '\n' + data.message : ''}
+      `.trim();
+
+      console.log("✅ [runCode] Success! Setting results");
+      setRunResult(resultMessage);
       setScore(calculatedScore);
 
-    } catch (err) {
-      console.error("Run code error:", err);
-      setRunResult("❌ Failed to connect to backend\n\nPlease check your internet connection.");
+    } catch (error) {
+      console.error("❌ [runCode] Catch block - Error:", error);
+      console.error("❌ [runCode] Error name:", error.name);
+      console.error("❌ [runCode] Error message:", error.message);
+      console.error("❌ [runCode] Error stack:", error.stack);
+      
+      setRunResult(
+        `❌ Failed to connect to server\n\nError: ${error.message}\n\nPlease check:\n• Your internet connection\n• Backend server is running\n• API URL is correct: ${API_URL}/run`
+      );
       setScore(0);
     } finally {
+      console.log("🏁 [runCode] Finally block - Setting isRunning to false");
       setIsRunning(false);
     }
   };
 
-  /* -------------------- SUBMIT CODE -------------------- */
+  /* ==================== SUBMIT CODE ==================== */
   const submitCode = async (onSuccess) => {
-    // Validate user is logged in
+    console.log("🔵 [submitCode] Function called");
+    console.log("🔍 [submitCode] State check:", {
+      userId,
+      testStarted,
+      testSubmitted,
+      activeProblem,
+      language,
+      codeLength: code?.length,
+      isRunning,
+      isSubmitting,
+      testId
+    });
+
+    // Validation checks
     if (!userId) {
-      setRunResult("❌ User not logged in. Please refresh the page.");
+      console.log("❌ [submitCode] Validation failed: No userId");
+      setRunResult("❌ Error: User not logged in. Please refresh the page.");
       return;
     }
 
-    // Validate conditions
     if (!testStarted || testSubmitted) {
-      setRunResult("⚠️ Test is not active");
+      console.log("❌ [submitCode] Validation failed: Test not active");
+      setRunResult("⚠️ Test is not active. Cannot submit code.");
       return;
     }
 
     if (!code.trim()) {
-      setRunResult("❌ Please write some code before submitting");
+      console.log("❌ [submitCode] Validation failed: No code");
+      setRunResult("❌ Please write some code before submitting.");
       return;
     }
 
     if (isRunning || isSubmitting) {
-      return; // Prevent multiple simultaneous requests
+      console.log("⚠️ [submitCode] Already running/submitting, skipping");
+      return; // Prevent concurrent requests₹
     }
 
     // Confirm submission
     const confirmSubmit = window.confirm(
-      `Are you sure you want to submit your solution for Problem ${activeProblem}?`
+      `⚠️ Are you sure you want to submit your solution for Problem ${activeProblem}?\n\nThis will lock your submission for this problem.`
     );
 
     if (!confirmSubmit) {
+      console.log("ℹ️ [submitCode] User cancelled submission");
       return;
     }
 
     setIsSubmitting(true);
     setRunResult("⏳ Submitting your solution...");
 
+    console.log("📦 [submitCode] Request payload:", {
+      userId,
+      testId,
+      problemId: activeProblem,
+      language,
+      codeLength: code.length,
+      submit: true
+    });
+
     try {
-      const res = await fetch(`${API_URL}/run`, {
+      console.log("💾 [submitCode] Step 1: Saving code before submission...");
+      
+      const saveResponse = await fetch(`${API_URL}/test/save-code`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId,
+          testId,
+          problemId: activeProblem,
+          code,
+          language
+        })
+      });
+
+      console.log("📡 [submitCode] Save response:", {
+        status: saveResponse.status,
+        ok: saveResponse.ok
+      });
+
+      // Step 2: Submit for evaluation
+      console.log("🚀 [submitCode] Step 2: Submitting for evaluation...");
+      console.log("🔗 [submitCode] Full URL:", `${API_URL}/run`);
+      
+      const response = await fetch(`${API_URL}/run`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           code,
           problemId: activeProblem,
           language,
-          userId: userId,
-          submit: true, // This is a final submission
-        }),
+          userId,
+          submit: true,
+          testId
+        })
       });
 
-      if (!res.ok) {
-        throw new Error("Server error");
+      console.log("📡 [submitCode] Submit response:", {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        url: response.url
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("❌ [submitCode] Server returned error:", errorText);
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
       }
 
-      const data = await res.json();
+      const data = await response.json();
+      console.log("📊 [submitCode] Submit result:", data);
 
       if (!data.success) {
-        setRunResult("❌ Submission Failed\n\n" + (data.error || "Please try again."));
+        console.log("⚠️ [submitCode] Submission failed:", data);
+        setRunResult(
+          `❌ Submission Failed\n\n${data.error || data.message || "Unknown error occurred"}\n\nPlease try again.`
+        );
         return;
       }
 
+      const submittedScore = data.score || 0;
+      const totalScore = data.totalScore || 100;
+      const isAccepted = data.verdict === "AC" || data.verdict === "Accepted";
+
+      console.log("💯 [submitCode] Submission scores:", {
+        submittedScore,
+        totalScore,
+        isAccepted,
+        verdict: data.verdict
+      });
+
       // Display submission results
-      setRunResult(`
+      const resultMessage = `
 ✅ SUBMITTED SUCCESSFULLY!
 
-Verdict: ${data.verdict}
-Score: ${data.score}/${data.totalScore || 100}
-Test Cases Passed: ${data.passed}/${data.total}
+Verdict: ${data.verdict || "N/A"}
+Score: ${submittedScore}/${totalScore}
+Test Cases Passed: ${data.passed || 0}/${data.total || 0}
 ${data.message ? '\n' + data.message : ''}
-      `.trim());
 
-      setScore(data.score || 0);
+${data.scoreImproved ? '🎉 New Best Score!' : ''}
+${data.bestScore ? `Best Score: ${data.bestScore}/100` : ''}
 
-      // Mark problem as solved if verdict is "Accepted"
-      if (data.verdict === "AC" || data.verdict === "Accepted") {
-        if (onSuccess) {
-          onSuccess(activeProblem);
-        }
+Submission saved successfully ✅
+      `.trim();
+
+      console.log("✅ [submitCode] Success! Setting results");
+      setRunResult(resultMessage);
+      setScore(submittedScore);
+
+      // Mark problem as solved if accepted
+      if (isAccepted && onSuccess) {
+        console.log("🎉 [submitCode] Marking problem as solved");
+        onSuccess(activeProblem);
       }
 
-    } catch (err) {
-      console.error("Submit code error:", err);
-      setRunResult("❌ Failed to connect to backend\n\nPlease check your internet connection and try again.");
+    } catch (error) {
+      console.error("❌ [submitCode] Catch block - Error:", error);
+      console.error("❌ [submitCode] Error name:", error.name);
+      console.error("❌ [submitCode] Error message:", error.message);
+      console.error("❌ [submitCode] Error stack:", error.stack);
+      
+      setRunResult(
+        `❌ Failed to connect to server\n\nError: ${error.message}\n\nPlease check:\n• Your internet connection\n• Backend server is running\n• API URL is correct: ${API_URL}/run\n\nYour code was NOT submitted. Please try again.`
+      );
     } finally {
+      console.log("🏁 [submitCode] Finally block - Setting isSubmitting to false");
       setIsSubmitting(false);
     }
   };
 
-  /* -------------------- RETURN -------------------- */
+  /* ==================== CHANGE LANGUAGE ==================== */
+  const handleLanguageChange = (newLanguage) => {
+    // Warn user if they have unsaved code
+    if (code !== languageTemplates[language] && code.trim() !== "") {
+      const confirmChange = window.confirm(
+        "Changing language will replace your current code with a template. Continue?"
+      );
+      
+      if (!confirmChange) {
+        return;
+      }
+    }
+
+    setLanguage(newLanguage);
+    setCode(languageTemplates[newLanguage]);
+  };
+
+  /* ==================== RETURN ==================== */
   return {
     // State
     language,
@@ -221,7 +429,7 @@ ${data.message ? '\n' + data.message : ''}
     isSubmitting,
     
     // Actions
-    setLanguage,
+    setLanguage: handleLanguageChange,
     setCode,
     runCode,
     submitCode,

@@ -19,6 +19,7 @@ app.use("/auth", authRoutes);
 app.use("/run", runRoutes);
 app.use("/test", require("./routes/test.routes"));
 app.use("/submission", require("./routes/submission.routes"));
+app.use("/problems", require("./routes/problems.routes")); // 🔥 ADD THIS
 
 console.log("hello");
 // ✅ Export instead of listen

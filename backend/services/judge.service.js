@@ -1,72 +1,39 @@
 const { exec } = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const { exec } = require("child_process");
 
-<<<<<<< HEAD
 console.log("✅ judge.service.js loaded");
 
 /* ---------------- CONFIG ---------------- */
 
 const BASE_DIR = path.join(__dirname, "../temp");
-if (!fs.existsSync(BASE_DIR)) fs.mkdirSync(BASE_DIR, { recursive: true });
-
-=======
-/* ---------------- CONFIG ---------------- */
-
-const BASE_DIR = path.join(__dirname, "../../runs");
-if (!fs.existsSync(BASE_DIR)) fs.mkdirSync(BASE_DIR);
+if (!fs.existsSync(BASE_DIR)) {
+  fs.mkdirSync(BASE_DIR, { recursive: true });
+}
 
 /* Language configuration */
->>>>>>> 9d169c67397f98911be23ecbc84efdbeb700d23a
 const LANG = {
   cpp: {
     file: "main.cpp",
-    image: "cpp-judge",
-<<<<<<< HEAD
+    image: "gcc:latest",
     compile: "g++ main.cpp -O2 -std=c++17 -o main",
     run: "./main"
-=======
-    cmd: "g++ main.cpp && ./a.out"
->>>>>>> 9d169c67397f98911be23ecbc84efdbeb700d23a
   },
   python: {
     file: "main.py",
-    image: "python-judge",
-<<<<<<< HEAD
+    image: "python:3.11-slim",
     run: "python3 main.py"
-=======
-    cmd: "python main.py"
->>>>>>> 9d169c67397f98911be23ecbc84efdbeb700d23a
   },
   js: {
     file: "main.js",
-    image: "js-judge",
-<<<<<<< HEAD
+    image: "node:18-slim",
     run: "node main.js"
-=======
-    cmd: "node main.js"
->>>>>>> 9d169c67397f98911be23ecbc84efdbeb700d23a
   },
   java: {
     file: "Main.java",
-    image: "java-judge",
-<<<<<<< HEAD
+    image: "openjdk:17-slim",
     compile: "javac Main.java",
     run: "java Main"
-=======
-    cmd: "javac Main.java && java Main"
->>>>>>> 9d169c67397f98911be23ecbc84efdbeb700d23a
-  },
-  rust: {
-    file: "main.rs",
-    image: "rust-judge",
-<<<<<<< HEAD
-    compile: "rustc main.rs -o main",
-    run: "./main"
-=======
-    cmd: "rustc main.rs && ./main"
->>>>>>> 9d169c67397f98911be23ecbc84efdbeb700d23a
   }
 };
 
@@ -74,12 +41,10 @@ const LANG = {
 
 const queue = [];
 let running = 0;
-<<<<<<< HEAD
-const MAX_CONCURRENT = 2;
+const MAX_CONCURRENT = 2; // Safe for t2.micro
 
 function processQueue() {
-  console.log("🔄 processQueue called");
-  console.log("📊 Queue:", queue.length, "Running:", running);
+  console.log("🔄 processQueue called - Queue:", queue.length, "Running:", running);
 
   if (running >= MAX_CONCURRENT) return;
   if (queue.length === 0) return;
@@ -88,108 +53,13 @@ function processQueue() {
   running++;
 
   job()
-    .catch(() => {})
+    .catch((err) => {
+      console.error("❌ Queue job failed:", err);
+    })
     .finally(() => {
       running--;
       processQueue();
     });
-=======
-const MAX_CONCURRENT = 2; // ⚠️ t2.micro safe
-
-function enqueue(task) {
-  return new Promise((resolve, reject) => {
-    queue.push({ task, resolve, reject });
-    processQueue();
-  });
-}
-
-function processQueue() {
-  if (running >= MAX_CONCURRENT || queue.length === 0) return;
-
-  const { task, resolve, reject } = queue.shift();
-  running++;
-
-  task()
-    .then(resolve)
-    .catch(reject)
-    .finally(() => {
-      running--;
-      processQueue();
-    });
-}
-
-/* ---------------- RUN JUDGE ---------------- */
-
-async function runJudge(code, language, testCases) {
-  if (!LANG[language]) {
-    return { success: false, message: "Unsupported language ❌" };
-  }
-
-  return enqueue(async () => {
-    const runId = Date.now() + "-" + Math.random().toString(36).slice(2);
-    const workDir = path.join(BASE_DIR, runId);
-    fs.mkdirSync(workDir);
-
-    const { file, image, cmd } = LANG[language];
-    fs.writeFileSync(path.join(workDir, file), code);
-
-    let passed = 0;
-    const results = [];
-
-    for (let i = 0; i < testCases.length; i++) {
-      const { input, output } = testCases[i];
-
-      const dockerCmd = `
-      docker run --rm \
-        --cpus="0.5" \
-        --memory="256m" \
-        --pids-limit=64 \
-        -v "${workDir}:/code" \
-        ${image} \
-        timeout 2s bash -c "${cmd}"
-      `;
-
-      const verdict = await new Promise((resolve) => {
-        exec(dockerCmd, { timeout: 4000 }, (err, stdout, stderr) => {
-          if (err) {
-            if (err.killed) return resolve("TLE");
-            if (stderr?.includes("error")) return resolve("CE");
-            return resolve("RE");
-          }
-
-          const actual = normalize(stdout || "");
-          const expected = normalize(output);
-
-          if (actual === expected) resolve("AC");
-          else resolve("WA");
-        });
-      });
-
-      results.push(verdict);
-      if (verdict === "AC") passed++;
-      else break; // stop at first failure
-    }
-
-    fs.rmSync(workDir, { recursive: true, force: true });
-
-    return {
-      success: passed === testCases.length,
-      passed,
-      total: testCases.length,
-      verdict:
-        passed === testCases.length
-          ? "AC"
-          : results.includes("TLE")
-          ? "TLE"
-          : results.includes("CE")
-          ? "CE"
-          : results.includes("RE")
-          ? "RE"
-          : "WA",
-      results
-    };
-  });
->>>>>>> 9d169c67397f98911be23ecbc84efdbeb700d23a
 }
 
 /* ---------------- MAIN JUDGE FUNCTION ---------------- */
@@ -201,18 +71,22 @@ async function runJudge(code, language, testCases) {
 
   return new Promise((resolve) => {
     const task = async () => {
-      console.log("📥 Task added to queue");
+      console.log("📥 Task started from queue");
 
       const langConfig = LANG[language];
       if (!langConfig) {
         return resolve({
           success: false,
-          error: `Unsupported language: ${language}`
+          verdict: "ERR",
+          error: `Unsupported language: ${language}`,
+          passed: 0,
+          total: testCases.length
         });
       }
 
       // Create unique work directory
-      const workDir = path.join(BASE_DIR, `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+      const runId = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const workDir = path.join(BASE_DIR, runId);
       fs.mkdirSync(workDir, { recursive: true });
 
       // Write code to file
@@ -222,6 +96,7 @@ async function runJudge(code, language, testCases) {
 
       const results = [];
       let passed = 0;
+      let firstError = null;
 
       // Run each test case
       for (let i = 0; i < testCases.length; i++) {
@@ -231,29 +106,45 @@ async function runJudge(code, language, testCases) {
         const result = await runSingleTest(workDir, langConfig, testCase);
         
         results.push(result.verdict);
-        if (result.verdict === "AC") passed++;
-
-        console.log(`✅ Test ${i + 1}: ${result.verdict}`);
-        if (result.verdict !== "AC") {
-          console.log("📥 Input:", testCase.input.substring(0, 100));
-          console.log("📤 Expected:", testCase.output.substring(0, 100));
-          console.log("📤 Got:", result.output.substring(0, 100));
+        
+        if (result.verdict === "AC") {
+          passed++;
+          console.log(`✅ Test ${i + 1}: PASSED`);
+        } else {
+          console.log(`❌ Test ${i + 1}: ${result.verdict}`);
+          if (!firstError) {
+            firstError = result;
+          }
+          // Continue running all tests instead of stopping at first failure
         }
       }
 
       // Cleanup
       try {
         fs.rmSync(workDir, { recursive: true, force: true });
+        console.log("🧹 Cleaned up work directory");
       } catch (err) {
         console.error("⚠️ Cleanup failed:", err.message);
       }
+
+      // Determine final verdict
+      let finalVerdict = "AC";
+      if (results.includes("CE")) finalVerdict = "CE";
+      else if (results.includes("TLE")) finalVerdict = "TLE";
+      else if (results.includes("RE")) finalVerdict = "RE";
+      else if (results.includes("WA")) finalVerdict = "WA";
 
       const finalResult = {
         success: passed === testCases.length,
         passed,
         total: testCases.length,
-        verdict: passed === testCases.length ? "AC" : results.find(r => r !== "AC") || "WA",
-        results
+        verdict: finalVerdict,
+        score: Math.floor((passed / testCases.length) * 100),
+        results,
+        error: firstError?.error || null,
+        message: passed === testCases.length 
+          ? "All test cases passed! 🎉" 
+          : `${passed}/${testCases.length} test cases passed`
       };
 
       console.log("🏁 Final Result:", finalResult);
@@ -272,20 +163,23 @@ async function runSingleTest(workDir, langConfig, testCase) {
     const TIME_LIMIT = 5000; // 5 seconds
     const MEMORY_LIMIT = "256m";
 
-    // Prepare input - escape for shell
-    const input = testCase.input.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/\$/g, '\\$');
-    
+    // Prepare input file
+    const inputFile = path.join(workDir, "input.txt");
+    fs.writeFileSync(inputFile, testCase.input);
+
     // Build Docker command
     let cmd = "";
     if (langConfig.compile) {
-      cmd = `${langConfig.compile} 2>&1 && echo '${input}' | ${langConfig.run}`;
+      // Compile first, then run with input
+      cmd = `cd /code && ${langConfig.compile} 2>&1 && cat input.txt | ${langConfig.run} 2>&1`;
     } else {
-      cmd = `echo '${input}' | ${langConfig.run}`;
+      // Just run with input
+      cmd = `cd /code && cat input.txt | ${langConfig.run} 2>&1`;
     }
 
-    const dockerCommand = `docker run --rm -i --memory="${MEMORY_LIMIT}" --cpus="1" -v "${workDir}:/code" -w /code ${langConfig.image} sh -c "${cmd}"`;
+    const dockerCommand = `docker run --rm --memory="${MEMORY_LIMIT}" --cpus="1.0" --network none -v "${workDir}:/code" -w /code ${langConfig.image} sh -c "${cmd}"`;
 
-    console.log("🐳 Running Docker");
+    console.log("🐳 Executing Docker container...");
 
     const execProcess = exec(
       dockerCommand,
@@ -295,45 +189,76 @@ async function runSingleTest(workDir, langConfig, testCase) {
         killSignal: "SIGKILL"
       },
       (error, stdout, stderr) => {
-        console.log("🐳 Docker exec returned");
+        console.log("🐳 Docker execution completed");
 
         // Handle different error types
         if (error) {
           if (error.killed || error.signal === "SIGKILL") {
-            return resolve({ verdict: "TLE", output: "", error: "Time Limit Exceeded" });
+            console.log("⏱️ Time Limit Exceeded");
+            return resolve({ 
+              verdict: "TLE", 
+              output: "", 
+              error: "Time Limit Exceeded (5s)" 
+            });
           }
           
           // Check if it's a compilation error
-          if (stderr && stderr.includes("error:")) {
-            console.log("❌ Compilation Error:", stderr.substring(0, 200));
-            return resolve({ verdict: "CE", output: "", error: stderr.substring(0, 500) });
+          const combinedOutput = (stdout + stderr).toLowerCase();
+          if (combinedOutput.includes("error:") || combinedOutput.includes("exception")) {
+            if (combinedOutput.includes("error:") && !stdout.trim()) {
+              console.log("❌ Compilation Error");
+              return resolve({ 
+                verdict: "CE", 
+                output: "", 
+                error: stderr.substring(0, 500) 
+              });
+            }
+            
+            // Runtime error
+            console.log("❌ Runtime Error");
+            return resolve({ 
+              verdict: "RE", 
+              output: stdout.trim(), 
+              error: stderr.substring(0, 500) 
+            });
           }
-          
-          // Runtime error
-          console.log("❌ Runtime Error:", error.message);
-          return resolve({ verdict: "RE", output: stdout, error: error.message });
         }
 
-        // Process output
-        const actualOutput = stdout.trim();
-        const expectedOutput = testCase.output.trim();
+        // Process output - normalize whitespace
+        const actualOutput = normalizeOutput(stdout);
+        const expectedOutput = normalizeOutput(testCase.output);
 
-        console.log("🧪 TEST INPUT:");
-        console.log(JSON.stringify(testCase.input));
-        console.log("🧪 EXPECTED OUTPUT:");
-        console.log(JSON.stringify(expectedOutput));
-        console.log("🧪 ACTUAL OUTPUT (raw):");
-        console.log(JSON.stringify(actualOutput));
+        console.log("📥 Input length:", testCase.input.length);
+        console.log("📤 Expected output:", expectedOutput.substring(0, 100));
+        console.log("📤 Actual output:", actualOutput.substring(0, 100));
 
         // Compare outputs
         if (actualOutput === expectedOutput) {
+          console.log("✅ Output matches!");
           resolve({ verdict: "AC", output: actualOutput });
         } else {
-          resolve({ verdict: "WA", output: actualOutput, expected: expectedOutput });
+          console.log("❌ Output mismatch");
+          resolve({ 
+            verdict: "WA", 
+            output: actualOutput, 
+            expected: expectedOutput,
+            error: `Expected:\n${expectedOutput.substring(0, 200)}\n\nGot:\n${actualOutput.substring(0, 200)}`
+          });
         }
       }
     );
   });
+}
+
+/* ---------------- HELPER FUNCTIONS ---------------- */
+
+function normalizeOutput(str) {
+  return str
+    .trim()
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .join('\n');
 }
 
 /* ---------------- EXPORTS ---------------- */
