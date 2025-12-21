@@ -7,21 +7,21 @@ export const test1Problems = [
     title: "Sum of Elements",
     description: `Given an array of n integers, find the sum of all elements.
 
-**Problem Statement:**
+Problem Statement:
 You are given an integer n (the number of elements) and an array of n integers. Calculate and return the sum of all elements in the array.
 
-**Input Format:**
+Input Format:
 - First line: An integer n (1 ≤ n ≤ 1000)
 - Second line: n space-separated integers (-10^6 ≤ each element ≤ 10^6)
 
-**Output Format:**
+Output Format:
 - A single integer representing the sum of all elements
 
-**Constraints:**
+Constraints:
 - 1 ≤ n ≤ 1000
 - -10^6 ≤ array elements ≤ 10^6
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `5
@@ -48,25 +48,25 @@ You are given an integer n (the number of elements) and an array of n integers. 
     title: "Number of Even Elements",
     description: `Given an array of n integers, count how many elements are even numbers.
 
-**Problem Statement:**
+Problem Statement:
 You are given an integer n and an array of n integers. Count and return how many numbers in the array are even (divisible by 2).
 
-**Input Format:**
+Input Format:
 - First line: An integer n (1 ≤ n ≤ 1000)
 - Second line: n space-separated integers
 
-**Output Format:**
+Output Format:
 - A single integer representing the count of even numbers
 
-**Note:**
+Note:
 - Zero (0) is considered an even number
 - Negative even numbers (like -2, -4) are also counted
 
-**Constraints:**
+Constraints:
 - 1 ≤ n ≤ 1000
 - -10^6 ≤ array elements ≤ 10^6
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `6
@@ -93,24 +93,24 @@ You are given an integer n and an array of n integers. Count and return how many
     title: "Number of Odd Elements",
     description: `Given an array of n integers, count how many elements are odd numbers.
 
-**Problem Statement:**
+Problem Statement:
 You are given an integer n and an array of n integers. Count and return how many numbers in the array are odd (not divisible by 2).
 
-**Input Format:**
+Input Format:
 - First line: An integer n (1 ≤ n ≤ 1000)
 - Second line: n space-separated integers
 
-**Output Format:**
+Output Format:
 - A single integer representing the count of odd numbers
 
-**Note:**
+Note:
 - Negative odd numbers (like -1, -3) are also counted
 
-**Constraints:**
+Constraints:
 - 1 ≤ n ≤ 1000
 - -10^6 ≤ array elements ≤ 10^6
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `6
@@ -141,24 +141,24 @@ export const test2Problems = [
     title: "Total Number of Factors",
     description: `Given a positive integer n, find the total number of factors (divisors) of n.
 
-**Problem Statement:**
+Problem Statement:
 A factor of a number n is a positive integer that divides n completely (with remainder 0). Your task is to count all such factors including 1 and n itself.
 
-**Input Format:**
+Input Format:
 - A single positive integer n (1 ≤ n ≤ 10^6)
 
-**Output Format:**
+Output Format:
 - A single integer representing the count of factors
 
-**Example:**
+Example:
 For n = 12:
 - Factors are: 1, 2, 3, 4, 6, 12
 - Count = 6
 
-**Constraints:**
+Constraints:
 - 1 ≤ n ≤ 10^6
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `12`,
@@ -182,24 +182,24 @@ For n = 12:
     title: "Sum of Digits",
     description: `Given a positive integer n, find the sum of all its digits.
 
-**Problem Statement:**
+Problem Statement:
 You are given a positive integer n. Calculate the sum of all digits in n.
 
-**Input Format:**
+Input Format:
 - A single positive integer n (0 ≤ n ≤ 10^9)
 
-**Output Format:**
+Output Format:
 - A single integer representing the sum of digits
 
-**Example:**
+Example:
 For n = 12345:
 - Digits are: 1, 2, 3, 4, 5
 - Sum = 1 + 2 + 3 + 4 + 5 = 15
 
-**Constraints:**
+Constraints:
 - 0 ≤ n ≤ 10^9
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `12345`,
@@ -223,25 +223,25 @@ For n = 12345:
     title: "Largest Number in Array",
     description: `Given an array of n integers, find the largest (maximum) element.
 
-**Problem Statement:**
+Problem Statement:
 You are given an integer n and an array of n integers. Find and return the largest number in the array.
 
-**Input Format:**
+Input Format:
 - First line: An integer n (1 ≤ n ≤ 1000)
 - Second line: n space-separated integers
 
-**Output Format:**
+Output Format:
 - A single integer representing the largest element
 
-**Note:**
+Note:
 - The array can contain negative numbers
 - If all numbers are negative, return the least negative number
 
-**Constraints:**
+Constraints:
 - 1 ≤ n ≤ 1000
 - -10^9 ≤ array elements ≤ 10^9
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `5
@@ -272,26 +272,26 @@ export const test3Problems = [
     title: "Smallest Number",
     description: `Given an array of n integers, find the smallest (minimum) element.
 
-**Problem Statement:**
+Problem Statement:
 You are given an integer n and an array of n integers. Find and return the smallest number in the array.
 
-**Input Format:**
+Input Format:
 - First line: An integer n (1 ≤ n ≤ 1000)
 - Second line: n space-separated integers
 
-**Output Format:**
+Output Format:
 - A single integer representing the smallest element
 
-**Note:**
+Note:
 - The array can contain negative numbers
 - If all numbers are positive, return the smallest positive number
 - If array has negative numbers, the most negative number is the smallest
 
-**Constraints:**
+Constraints:
 - 1 ≤ n ≤ 1000
 - -10^9 ≤ array elements ≤ 10^9
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `5
@@ -318,26 +318,26 @@ You are given an integer n and an array of n integers. Find and return the small
     title: "Smallest Even Number",
     description: `Given an array of n integers, find the smallest even number. If no even number exists, return -1.
 
-**Problem Statement:**
+Problem Statement:
 You are given an integer n and an array of n integers. Find and return the smallest even number in the array. If there are no even numbers, return -1.
 
-**Input Format:**
+Input Format:
 - First line: An integer n (1 ≤ n ≤ 1000)
 - Second line: n space-separated integers
 
-**Output Format:**
+Output Format:
 - A single integer: the smallest even number, or -1 if no even numbers exist
 
-**Note:**
+Note:
 - A number is even if it's divisible by 2
 - Zero (0) is considered even
 - Negative even numbers (like -2, -4) are also considered
 
-**Constraints:**
+Constraints:
 - 1 ≤ n ≤ 1000
 - -10^9 ≤ array elements ≤ 10^9
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `6
@@ -364,25 +364,25 @@ You are given an integer n and an array of n integers. Find and return the small
     title: "Smallest Odd Number",
     description: `Given an array of n integers, find the smallest odd number. If no odd number exists, return -1.
 
-**Problem Statement:**
+Problem Statement:
 You are given an integer n and an array of n integers. Find and return the smallest odd number in the array. If there are no odd numbers, return -1.
 
-**Input Format:**
+Input Format:
 - First line: An integer n (1 ≤ n ≤ 1000)
 - Second line: n space-separated integers
 
-**Output Format:**
+Output Format:
 - A single integer: the smallest odd number, or -1 if no odd numbers exist
 
-**Note:**
+Note:
 - A number is odd if it's NOT divisible by 2
 - Negative odd numbers (like -1, -3) are also considered
 
-**Constraints:**
+Constraints:
 - 1 ≤ n ≤ 1000
 - -10^9 ≤ array elements ≤ 10^9
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `6
@@ -413,27 +413,27 @@ export const test4Problems = [
     title: "Max Difference Between Any Two Numbers",
     description: `Given an array of n integers, find the maximum difference between any two elements.
 
-**Problem Statement:**
+Problem Statement:
 You are given an integer n and an array of n integers. Find the maximum absolute difference between any two elements in the array.
 
 The difference is calculated as: |array[i] - array[j]| for any valid i, j.
 
-**Input Format:**
+Input Format:
 - First line: An integer n (2 ≤ n ≤ 1000)
 - Second line: n space-separated integers
 
-**Output Format:**
+Output Format:
 - A single integer representing the maximum difference
 
-**Note:**
+Note:
 - The maximum difference is always: (max element - min element)
 - The difference is always positive (absolute value)
 
-**Constraints:**
+Constraints:
 - 2 ≤ n ≤ 1000
 - -10^9 ≤ array elements ≤ 10^9
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `5
@@ -460,28 +460,28 @@ The difference is calculated as: |array[i] - array[j]| for any valid i, j.
     title: "Max Product of Any Three Numbers",
     description: `Given an array of n integers, find the maximum product that can be obtained by multiplying any three numbers.
 
-**Problem Statement:**
+Problem Statement:
 You are given an integer n (n ≥ 3) and an array of n integers. Find the maximum product that can be obtained by multiplying any three elements.
 
-**Input Format:**
+Input Format:
 - First line: An integer n (3 ≤ n ≤ 1000)
 - Second line: n space-separated integers
 
-**Output Format:**
+Output Format:
 - A single integer representing the maximum product
 
-**Note:**
+Note:
 - The array can contain negative numbers
 - The maximum product might be obtained from:
   - Three largest positive numbers, OR
   - Two smallest negative numbers and the largest positive number
   - Consider both cases!
 
-**Constraints:**
+Constraints:
 - 3 ≤ n ≤ 1000
 - -1000 ≤ array elements ≤ 1000
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `5
@@ -508,26 +508,26 @@ You are given an integer n (n ≥ 3) and an array of n integers. Find the maximu
     title: "Number of Vowels in String",
     description: `Given a string, count the total number of vowels (a, e, i, o, u) in it.
 
-**Problem Statement:**
+Problem Statement:
 You are given a string consisting of letters (both uppercase and lowercase), spaces, and possibly other characters. Count and return the total number of vowels in the string.
 
-**Vowels:** a, e, i, o, u, A, E, I, O, U
+Vowels: a, e, i, o, u, A, E, I, O, U
 
-**Input Format:**
+Input Format:
 - A single line containing a string (length ≤ 10^5)
 
-**Output Format:**
+Output Format:
 - A single integer representing the count of vowels
 
-**Note:**
+Note:
 - Both uppercase and lowercase vowels should be counted
 - Spaces and other characters should be ignored
 
-**Constraints:**
+Constraints:
 - 1 ≤ string length ≤ 10^5
 - String may contain letters, spaces, digits, and special characters
 
-**Time Limit:** 1 second`,
+Time Limit: 1 second`,
     examples: [
       {
         input: `hello world`,

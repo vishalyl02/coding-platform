@@ -45,7 +45,7 @@ function QuestionPanel({ problem }) {
                 border: "1px solid #e5e7eb"
               }}
             >
-              <div style={{ fontSize: "13px", fontWeight: "600", marginBottom: "8px" }}>
+              <div style={{ fontSize: "13px", fontWeight: "600", marginBottom: "8px" , color:"blue" }}>
                 Example {idx + 1}:
               </div>
               
@@ -60,7 +60,8 @@ function QuestionPanel({ problem }) {
                   fontSize: "12px",
                   fontFamily: "monospace",
                   margin: "4px 0 0 0",
-                  border: "1px solid #e5e7eb"
+                  border: "1px solid #e5e7eb",
+                  color:"blue"
                 }}>
                   {example.input}
                 </pre>
@@ -77,7 +78,8 @@ function QuestionPanel({ problem }) {
                   fontSize: "12px",
                   fontFamily: "monospace",
                   margin: "4px 0 0 0",
-                  border: "1px solid #e5e7eb"
+                  border: "1px solid #e5e7eb",
+                  color:"blue"
                 }}>
                   {example.output}
                 </pre>
