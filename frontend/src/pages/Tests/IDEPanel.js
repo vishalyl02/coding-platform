@@ -24,6 +24,12 @@ function IDEPanel({
   const [backendTestCases, setBackendTestCases] = useState([]);
   const [activeTab, setActiveTab] = useState(0); // 0, 1, 2 for test case tabs, -1 for custom
 
+
+  const LANGUAGE_OPTIONS = [
+    { value: 'cpp', label: 'C++' },
+    { value: 'python', label: 'Python' },
+    { value: 'java', label: 'Java' }
+  ];
   // 🔥 Fetch actual test cases from backend
   useEffect(() => {
     if (!testId || !problem?.id) {
@@ -152,16 +158,20 @@ function IDEPanel({
 
       {/* Toolbar */}
       <div style={{ marginBottom: "8px", display: "flex", gap: "8px" }}>
-        <select
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          disabled={!testStarted || testSubmitted}
-          className="theme-select"
-        >
-          <option value="cpp">C++</option>
-          <option value="python">Python</option>
-          <option value="java">Java</option>
-        </select>
+      
+
+<select
+  value={language}
+  onChange={(e) => setLanguage(e.target.value)}
+  disabled={!testStarted || testSubmitted}
+  className="theme-select"
+>
+  {LANGUAGE_OPTIONS.map(opt => (
+    <option key={opt.value} value={opt.value}>
+      {opt.label}
+    </option>
+  ))}
+</select>
 
         <button
           className="solve-btn"
