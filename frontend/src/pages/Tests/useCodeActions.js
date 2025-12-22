@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { languageTemplates } from "./languageTemplates";
+import { languageSample } from "./languageSample";
 
 // 🔥 API URL - Make sure this is correct with no trailing slash
 const API_URL = "https://inspection-loop-neck-assuming.trycloudflare.com";
@@ -7,7 +7,7 @@ const API_URL = "https://inspection-loop-neck-assuming.trycloudflare.com";
 export function useCodeActions(userId, activeProblem, testStarted, testSubmitted, testId) {
   /* ==================== STATE ==================== */
   const [language, setLanguage] = useState("cpp");
-  const [code, setCode] = useState(languageTemplates.cpp);
+  const [code, setCode] = useState(languageSample.cpp);
   const [runResult, setRunResult] = useState("");
   const [score, setScore] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -55,7 +55,7 @@ export function useCodeActions(userId, activeProblem, testStarted, testSubmitted
   useEffect(() => {
     // Reset to template if no user or test
     if (!userId || !testId) {
-      setCode(languageTemplates[language]);
+      setCode(languageSample[language]);
       setScore(0);
       return;
     }
@@ -88,12 +88,12 @@ export function useCodeActions(userId, activeProblem, testStarted, testSubmitted
         } else {
           // No saved code, use template
           console.log("📝 No saved code found, using template");
-          setCode(languageTemplates[language]);
+          setCode(languageSample[language]);
           setScore(0);
         }
       } catch (error) {
         console.error("❌ Failed to load saved code:", error);
-        setCode(languageTemplates[language]);
+        setCode(languageSample[language]);
         setScore(0);
       }
     };
@@ -404,7 +404,7 @@ Submission saved successfully ✅
   /* ==================== CHANGE LANGUAGE ==================== */
   const handleLanguageChange = (newLanguage) => {
     // Warn user if they have unsaved code
-    if (code !== languageTemplates[language] && code.trim() !== "") {
+    if (code !== languageSample[language] && code.trim() !== "") {
       const confirmChange = window.confirm(
         "Changing language will replace your current code with a template. Continue?"
       );
@@ -415,7 +415,7 @@ Submission saved successfully ✅
     }
 
     setLanguage(newLanguage);
-    setCode(languageTemplates[newLanguage]);
+    setCode(languageSample[newLanguage]);
   };
 
   /* ==================== RETURN ==================== */
