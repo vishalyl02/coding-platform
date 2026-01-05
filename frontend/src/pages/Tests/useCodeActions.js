@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { languageSample } from "./languageSample";
 
 // 🔥 API URL - Make sure this is correct with no trailing slash
-const API_URL = "https://inspection-loop-neck-assuming.trycloudflare.com";
+const API_URL = "https://hometown-publicity-eva-qty.trycloudflare.com";
 
 export function useCodeActions(userId, activeProblem, testStarted, testSubmitted, testId) {
   /* ==================== STATE ==================== */

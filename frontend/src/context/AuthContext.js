@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     console.log("⏳ Fetching user data from backend...");
     
     try {
-      const url = `https://inspection-loop-neck-assuming.trycloudflare.com/auth/me/${userId}`;
+      const url = `https://hometown-publicity-eva-qty.trycloudflare.com/auth/me/${userId}`;
       console.log("📡 Fetching from:", url);
       
       const res = await fetch(url);
