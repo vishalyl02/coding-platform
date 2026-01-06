@@ -17,6 +17,40 @@ const problemTests = {
       input: `3
 5 4 -1`,
       output: `9`
+    },
+    {
+      input: `1
+1`,
+      output: `1`
+    },
+
+{      input: `3
+5 4 -1`,
+      output: `9`
+    },{
+      input: `5
+-2 1 -3 4 -1`,
+      output: `4`
+    },
+    {
+      input: `8
+-2 -3 4 -1 -2 1 5 -3`,
+      output: `7`
+    },
+    {
+      input: `2
+5 4`,
+      output: `-1`
+    },
+    {
+      input: `2
+1 2`,
+      output: `1`
+    },
+
+{      input: `2
+5 4`,
+      output: `9`
     }
   ],
 

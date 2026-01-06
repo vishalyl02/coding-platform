@@ -24,6 +24,7 @@ function IDEPanel({
   const [testResults, setTestResults] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [backendTestCases, setBackendTestCases] = useState([]);
+  const [totalTestCount, setTotalTestCount] = useState(0); // 🔥 Track total test count
 
   const LANGUAGE_OPTIONS = [
     { value: 'cpp', label: 'C++' },
@@ -41,7 +42,8 @@ function IDEPanel({
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         if (data.success) {
-          setBackendTestCases(data.testCases);
+          setBackendTestCases(data.testCases); // Only first 3
+          setTotalTestCount(data.totalTestCases); // 🔥 Store total count
         }
       } catch (err) {
         console.error("❌ Failed to fetch test cases:", err);
@@ -127,10 +129,10 @@ function IDEPanel({
       height: "100%",
       padding: "16px",
       gap: "16px",
-      overflow: "hidden"  // Changed from overflowY: "auto"
+      overflow: "hidden"
     }}>
       {/* Top Controls - Fixed */}
-      <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
+      <div style={{ display: "flex", gap: "8px", flexShrink: 0,marginTop:"10px"}}>
         <select
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
@@ -148,7 +150,7 @@ function IDEPanel({
           className="solve-btn"
           disabled={!testStarted || testSubmitted || isRunning}
           onClick={handleRunTests}
-          style={{ background: "#10b981", flex: 1 }}
+          style={{ background: "#10b981", flex: 0.25,height:'40px', width:"50px" }}
         >
           {isRunning ? "Running..." : "▶ Run"}
         </button>
@@ -157,6 +159,7 @@ function IDEPanel({
           className="solve-btn"
           disabled={!testStarted || testSubmitted}
           onClick={onSubmitCode}
+          style={{ height:'40px' }}
         >
           Submit Code
         </button>
@@ -165,8 +168,8 @@ function IDEPanel({
       {/* Code Editor - Scrollable Section */}
       <div style={{ 
         flexShrink: 0,
-        maxHeight: "350px",  // Limit height
-        overflowY: "auto",   // Enable scrolling
+        maxHeight: "350px",
+        overflowY: "auto",
         border: "1px solid #e5e7eb",
         borderRadius: "8px",
         padding: "4px"
@@ -183,7 +186,7 @@ function IDEPanel({
       {/* Test Cases - Scrollable Section */}
       <div style={{ 
         flex: 1,
-        minHeight: 0,  // Important for flex scrolling
+        minHeight: 0,
         display: "flex",
         flexDirection: "column"
       }}>
@@ -197,7 +200,7 @@ function IDEPanel({
         />
       </div>
 
-      {/* Test Results Summary - Fixed at bottom */}
+      {/* 🔥 Test Progress - Shows X/Total including hidden tests */}
       {testResults?.default && (
         <div
           style={{
@@ -214,7 +217,13 @@ function IDEPanel({
         >
           {testResults.default.success ? "✅ All Tests Passed!" : "❌ Some Tests Failed"}
           <div style={{ fontSize: "13px", marginTop: "4px", fontWeight: "400" }}>
+            {/* 🔥 Shows progress including hidden test cases */}
             Passed: {testResults.default.passed}/{testResults.default.total}
+            {/* {testResults.default.total > 3 && (
+              <span style={{ fontSize: "11px", display: "block", marginTop: "2px", opacity: 0.8 }}>
+                (including {testResults.default.total - 3} hidden test cases)
+              </span>
+            )} */}
           </div>
         </div>
       )}

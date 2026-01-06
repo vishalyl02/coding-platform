@@ -15,18 +15,18 @@ if (!fs.existsSync(BASE_DIR)) {
 const LANG = {
   cpp: {
     file: "main.cpp",
-    image: "gcc:14-bookworm",  // ← CHANGED
+    image: "code-runner",
     compile: "g++ main.cpp -O2 -std=c++17 -o main",
     run: "./main"
   },
   python: {
     file: "main.py",
-    image: "python:3.11-alpine",  // ✅ Keep this
+    image: "code-runner",
     run: "python3 main.py"
   },
   java: {
     file: "Main.java",
-    image: "eclipse-temurin:17-jre-alpine",  // ← CHANGED
+    image: "code-runner",
     compile: "javac Main.java",
     run: "java Main"
   }

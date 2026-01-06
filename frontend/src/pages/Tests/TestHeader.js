@@ -8,7 +8,7 @@ function TestHeader({
   onSubmit,
 }) {
   return (
-    <div className="test-header-modern">
+    <div className="test-header-modern" style={{height:"30px"}}>
       <div className="test-header-left">
         <h2 className="test-header-title">Coding Challenge</h2>
       </div>
@@ -41,7 +41,7 @@ function TestHeader({
         )}
 
         {testStarted && !testSubmitted && (
-          <button className="test-header-btn test-submit-btn" onClick={onSubmit}>
+          <button className="test-header-btn test-submit-btn" onClick={onSubmit} style={{height:"30px"}}>
             <svg className="test-header-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
               <polyline points="22 4 12 14.01 9 11.01"></polyline>
