@@ -1,83 +1,196 @@
 const problemTests = {
   // ==================== TEST 1 - BASICS ====================
   
-  // Problem 1.1: Sum of Elements
+  // Problem 1.1: Kadane's Algorithm - Maximum Subarray Sum
   "1-1": [
     {
       input: `5
-1 2 3 4 5`,
-      output: `15`
+-2 1 -3 4 -1`,
+      output: `4`
+    },
+    {
+      input: `8
+-2 -3 4 -1 -2 1 5 -3`,
+      output: `7`
     },
     {
       input: `3
-10 20 30`,
-      output: `60`
-    },
-    {
-      input: `4
--5 10 -3 8`,
-      output: `10`
+5 4 -1`,
+      output: `9`
     }
   ],
 
-  // Problem 1.2: Number of Even Elements
+  // Problem 1.2: Maximum Frequency of a Character
   "1-2": [
     {
-      input: `6
-1 2 3 4 5 6`,
-      output: `3`
+      input: `hello`,
+      output: `2`
     },
     {
-      input: `5
-2 4 6 8 10`,
-      output: `5`
+      input: `aabbcc`,
+      output: `2`
     },
     {
-      input: `4
-1 3 5 7`,
-      output: `0`
+      input: `programming`,
+      output: `2`
     }
   ],
 
-  // Problem 1.3: Number of Odd Elements
+  // Problem 1.3: Palindrome Check
   "1-3": [
     {
-      input: `6
-1 2 3 4 5 6`,
-      output: `3`
+      input: `racecar`,
+      output: `YES`
     },
     {
-      input: `5
-1 3 5 7 9`,
-      output: `5`
+      input: `hello`,
+      output: `NO`
     },
     {
-      input: `4
-2 4 6 8`,
-      output: `0`
+      input: `A man a plan a canal Panama`,
+      output: `YES`
     }
   ],
 
   // ==================== TEST 2 - NUMBER OPERATIONS ====================
   
-  // Problem 2.1: Total Number of Factors
+  // Problem 2.1: Transpose of a Matrix
   "2-1": [
     {
-      input: `12`,
-      output: `6`
+      input: `2 3
+1 2 3
+4 5 6`,
+      output: `1 4
+2 5
+3 6`
     },
     {
-      input: `20`,
-      output: `6`
+      input: `3 3
+1 2 3
+4 5 6
+7 8 9`,
+      output: `1 4 7
+2 5 8
+3 6 9`
     },
     {
-      input: `7`,
-      output: `2`
+      input: `1 4
+1 2 3 4`,
+      output: `1
+2
+3
+4`
     }
   ],
 
-  // Problem 2.2: Sum of Digits
+  // Problem 2.2: Two Sum
   "2-2": [
+    {
+      input: `4 9
+2 7 11 15`,
+      output: `YES`
+    },
+    {
+      input: `3 6
+1 2 3`,
+      output: `YES`
+    },
+    {
+      input: `5 10
+1 5 3 7 2`,
+      output: `YES`
+    }
+  ],
+
+  // Problem 2.3: Prime Number Check
+  "2-3": [
+    {
+      input: `7`,
+      output: `YES`
+    },
+    {
+      input: `12`,
+      output: `NO`
+    },
+    {
+      input: `2`,
+      output: `YES`
+    }
+  ],
+
+  // ==================== TEST 3 - STRING OPERATIONS ====================
+  
+  // Problem 3.1: Valid Parentheses
+  "3-1": [
+    {
+      input: `()[]{}`,
+      output: `YES`
+    },
+    {
+      input: `([)]`,
+      output: `NO`
+    },
+    {
+      input: `{[]}`,
+      output: `YES`
+    }
+  ],
+
+  // Problem 3.2: Maximum Consecutive Repeated Character Frequency
+  "3-2": [
+    {
+      input: `aaabbbaa`,
+      output: `3`
+    },
+    {
+      input: `aabbbbcc`,
+      output: `4`
+    },
+    {
+      input: `abcdef`,
+      output: `1`
+    }
+  ],
+
+  // Problem 3.3: Pair Count with Sum Less Than K
+  "3-3": [
+    {
+      input: `4 6
+1 2 3 4`,
+      output: `4`
+    },
+    {
+      input: `5 10
+3 5 7 2 8`,
+      output: `6`
+    },
+    {
+      input: `3 5
+5 5 5`,
+      output: `0`
+    }
+  ],
+
+  // ==================== TEST 4 - ADVANCED OPERATIONS ====================
+  
+  // Problem 4.1: Count Vowels and Alphanumeric Characters
+  "4-1": [
+    {
+      input: `Hello World!`,
+      output: `3 10`
+    },
+    {
+      input: `Programming123`,
+      output: `3 14`
+    },
+    {
+      input: `abc 123 xyz`,
+      output: `1 9`
+    }
+  ],
+
+  // Problem 4.2: Sum of Digits
+  "4-2": [
     {
       input: `12345`,
       output: `15`
@@ -92,137 +205,22 @@ const problemTests = {
     }
   ],
 
-  // Problem 2.3: Largest Number in Array
-  "2-3": [
-    {
-      input: `5
-3 7 2 9 1`,
-      output: `9`
-    },
-    {
-      input: `4
--5 -2 -10 -1`,
-      output: `-1`
-    },
-    {
-      input: `6
-100 200 50 150 300 250`,
-      output: `300`
-    }
-  ],
-
-  // ==================== TEST 3 - FINDING MINIMUM ====================
-  
-  // Problem 3.1: Smallest Number
-  "3-1": [
-    {
-      input: `5
-3 7 2 9 1`,
-      output: `1`
-    },
-    {
-      input: `4
--5 -2 -10 -1`,
-      output: `-10`
-    },
-    {
-      input: `6
-100 50 200 25 300 75`,
-      output: `25`
-    }
-  ],
-
-  // Problem 3.2: Smallest Even Number
-  "3-2": [
-    {
-      input: `6
-3 8 5 2 9 4`,
-      output: `2`
-    },
-    {
-      input: `5
-10 6 8 12 4`,
-      output: `4`
-    },
-    {
-      input: `4
-1 3 5 7`,
-      output: `-1`
-    }
-  ],
-
-  // Problem 3.3: Smallest Odd Number
-  "3-3": [
-    {
-      input: `6
-2 7 4 3 8 5`,
-      output: `3`
-    },
-    {
-      input: `5
-1 9 3 11 5`,
-      output: `1`
-    },
-    {
-      input: `4
-2 4 6 8`,
-      output: `-1`
-    }
-  ],
-
-  // ==================== TEST 4 - ADVANCED OPERATIONS ====================
-  
-  // Problem 4.1: Max Difference Between Any Two Numbers
-  "4-1": [
-    {
-      input: `5
-2 7 3 1 9`,
-      output: `8`
-    },
-    {
-      input: `4
-10 5 20 15`,
-      output: `15`
-    },
-    {
-      input: `6
--5 10 3 -8 7 2`,
-      output: `18`
-    }
-  ],
-
-  // Problem 4.2: Max Product of Any Three Numbers
-  "4-2": [
-    {
-      input: `5
-1 2 3 4 5`,
-      output: `60`
-    },
-    {
-      input: `4
--10 -5 2 3`,
-      output: `150`
-    },
-    {
-      input: `6
-1 10 2 6 5 3`,
-      output: `300`
-    }
-  ],
-
-  // Problem 4.3: Number of Vowels in String
+  // Problem 4.3: Anagram Check
   "4-3": [
     {
-      input: `hello world`,
-      output: `3`
+      input: `listen
+silent`,
+      output: `YES`
     },
     {
-      input: `AEIOU`,
-      output: `5`
+      input: `hello
+world`,
+      output: `NO`
     },
     {
-      input: `Programming is fun`,
-      output: `5`
+      input: `Anagram
+Nagaram`,
+      output: `NO`
     }
   ],
 };
