@@ -222,7 +222,7 @@ Time Limit: 1 second`,
       {
         input: `3 6
 1 2 3`,
-        output: `YES`,
+        output: `NO`,
         explanation: "3 + 3 would work but we can't use same element. However, we don't have it. Wait - no valid pair exists. Output should be NO"
       },
       {
