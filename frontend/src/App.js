@@ -12,7 +12,8 @@ import Questions from "./pages/Questions";
 import "./App.css";
 import Register from "./pages/Register";
 import Leaderboard from "./pages/Leaderboard/Leaderboard";
-
+import RoadmapPage from "./pages/Roadmap/roadmap";
+import QuizApp from "./pages/Quiz/quiz";
 function App() {
   return (
     <BrowserRouter>
@@ -29,6 +30,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/questions" element={<Questions />} />
         <Route path="/leaderboard" element={<Leaderboard />} />  {/* 🔥 ADD */}
+        <Route path="/roadmap" element={<RoadmapPage/>} />  {/* 🔥 ADD */}
+        <Route path="/quiz" element={<QuizApp/>} />  {/* 🔥 ADD */}
       </Routes>
     </BrowserRouter>
   );
