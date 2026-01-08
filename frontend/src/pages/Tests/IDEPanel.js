@@ -127,9 +127,10 @@ function IDEPanel({
       display: "flex", 
       flexDirection: "column", 
       height: "100%",
-      padding: "16px",
-      gap: "16px",
-      overflow: "hidden"
+      padding: "0px",
+      gap: "5px",
+      overflow: "hidden",
+      fontSize:"20px",
     }}>
       {/* Top Controls - Fixed */}
       <div style={{ display: "flex", gap: "8px", flexShrink: 0,marginTop:"10px"}}>
@@ -188,7 +189,8 @@ function IDEPanel({
         flex: 1,
         minHeight: 0,
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+       
       }}>
         <TestCaseTabs
           displayTestCases={displayTestCases}
@@ -204,7 +206,9 @@ function IDEPanel({
       {testResults?.default && (
         <div
           style={{
-            padding: "12px",
+            // padding: "12px",
+            padding:"0px",
+            height:"38px",
             background: testResults.default.success ? "#dcfce7" : "#fee2e2",
             color: testResults.default.success ? "#065f46" : "#7f1d1d",
             borderRadius: "8px",
@@ -232,8 +236,9 @@ function IDEPanel({
       {score !== undefined && (
         <div
           style={{
-            height:"30px",
-            padding: "10px",
+            height:"20px",
+            padding: "0px",
+            margin:"0px",
             background: "#dcfce7",
             color: "#065f46",
             borderRadius: "8px",
