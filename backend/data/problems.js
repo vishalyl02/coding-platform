@@ -23,8 +23,8 @@ const problemTests = {
 1`,
       output: `1`
     },
-
-{      input: `3
+    {
+      input: `3
 5 4 -1`,
       output: `9`
     }
@@ -222,6 +222,123 @@ world`,
       input: `Anagram
 Nagaram`,
       output: `NO`
+    }
+  ],
+
+  // ==================== TEST 5 - ADVANCED ALGORITHMS ====================
+  
+  // Problem 5.1: The Treasure Map Mystery (Contains Duplicate Within K)
+  "5-1": [
+    {
+      input: `4 3
+1 2 3 1`,
+      output: `YES`
+    },
+    {
+      input: `4 1
+1 0 1 1`,
+      output: `YES`
+    },
+    {
+      input: `3 2
+1 2 3`,
+      output: `NO`
+    }
+  ],
+
+  // Problem 5.2: The Magical Product Spell (Product of Array Except Self)
+  "5-2": [
+    {
+      input: `4
+1 2 3 4`,
+      output: `24 12 8 6`
+    },
+    {
+      input: `5
+-1 1 0 -3 3`,
+      output: `0 0 9 0 0`
+    },
+    {
+      input: `3
+2 3 4`,
+      output: `12 8 6`
+    }
+  ],
+
+  // Problem 5.3: The Twin Cities Bridge (Median of Two Sorted Arrays)
+  "5-3": [
+    {
+      input: `2 1
+1 3
+2`,
+      output: `2`
+    },
+    {
+      input: `2 2
+1 2
+3 4`,
+      output: `2`
+    },
+    {
+      input: `3 3
+1 3 5
+2 4 6`,
+      output: `3`
+    }
+  ],
+
+  // Problem 5.4: The Ticket Counter Queue (Queue Using Two Stacks)
+  "5-4": [
+    {
+      input: `6
+1 10
+1 20
+1 30
+3
+2
+3`,
+      output: `10
+10
+20`
+    },
+    {
+      input: `8
+1 5
+1 15
+1 25
+2
+3
+1 35
+2
+3`,
+      output: `5
+15
+15
+25`
+    }
+  ],
+
+  // Problem 5.5: The Skyline Building Challenge (Largest Rectangle in Histogram)
+  "5-5": [
+    {
+      input: `6
+2 1 5 6 2 3`,
+      output: `10`
+    },
+    {
+      input: `7
+6 2 5 4 5 1 6`,
+      output: `12`
+    },
+    {
+      input: `4
+2 4 3 1`,
+      output: `6`
+    },
+    {
+      input: `1
+5`,
+      output: `5`
     }
   ],
 };

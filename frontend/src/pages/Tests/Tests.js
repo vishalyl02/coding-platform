@@ -80,7 +80,7 @@ function Tests() {
   const { formatTime } = useTestTimer(
     testStarted,
     testSubmitted,
-    90 * 60, // 90 minutes in seconds
+    1000 * 60, 
     testId
   );
 

@@ -191,6 +191,15 @@ function TestsLanding() {
       duration: "90 minutes",
       problems: 3,
       topics: ["Max Difference", "Max Product", "Strings"]
+    },
+    {
+      id: 5,
+      title: "Test 5",
+      description: "Array Based Questions",
+      difficulty: "Medium",
+      duration: "100000 minutes",
+      problems: 5,
+      topics: ["Array based"]
     }
   ];
 
