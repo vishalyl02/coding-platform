@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CodeEditor from "./CodeEditor";
 import TestCaseTabs from "./TestCaseTabs";
 
-const API_URL = "https://hometown-publicity-eva-qty.trycloudflare.com";
+const API_URL = "https://informed-illinois-cars-tissue.trycloudflare.com";
 
 function IDEPanel({
   code,

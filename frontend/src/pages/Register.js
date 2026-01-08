@@ -22,7 +22,7 @@ function Register() {
     setIsLoading(true);
 
     try {
-      const res = await fetch('https://hometown-publicity-eva-qty.trycloudflare.com/auth/register', {
+      const res = await fetch('https://informed-illinois-cars-tissue.trycloudflare.com/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),

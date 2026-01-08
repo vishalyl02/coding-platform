@@ -6,7 +6,7 @@ function Leaderboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://hometown-publicity-eva-qty.trycloudflare.com/leaderboard")
+    fetch("https://informed-illinois-cars-tissue.trycloudflare.com/leaderboard")
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setUsers(data);
