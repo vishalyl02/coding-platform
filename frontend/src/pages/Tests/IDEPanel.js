@@ -232,6 +232,7 @@ function IDEPanel({
       {score !== undefined && (
         <div
           style={{
+            height:"30px",
             padding: "10px",
             background: "#dcfce7",
             color: "#065f46",

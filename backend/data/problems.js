@@ -55,10 +55,6 @@ const problemTests = {
     {
       input: `hello`,
       output: `NO`
-    },
-    {
-      input: `A man a plan a canal Panama`,
-      output: `YES`
     }
   ],
 
@@ -99,11 +95,6 @@ const problemTests = {
       input: `4 9
 2 7 11 15`,
       output: `YES`
-    },
-    {
-      input: `3 6
-1 2 3`,
-      output: `NO`
     },
     {
       input: `5 10

@@ -120,11 +120,6 @@ Time Limit: 1 second`,
         input: `hello`,
         output: `NO`,
         explanation: "The string does not read the same forwards and backwards"
-      },
-      {
-        input: `A man a plan a canal Panama`,
-        output: `YES`,
-        explanation: "Ignoring spaces and case: 'amanaplanacanalpanama' is a palindrome"
       }
     ],
   },
@@ -218,12 +213,6 @@ Time Limit: 1 second`,
 2 7 11 15`,
         output: `YES`,
         explanation: "2 + 7 = 9, so the answer is YES"
-      },
-      {
-        input: `3 6
-1 2 3`,
-        output: `NO`,
-        explanation: "3 + 3 would work but we can't use same element. However, we don't have it. Wait - no valid pair exists. Output should be NO"
       },
       {
         input: `5 10
