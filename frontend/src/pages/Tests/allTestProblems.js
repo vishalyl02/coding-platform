@@ -530,29 +530,31 @@ Nagaram`,
     ],
   },
 ];
+
+// ==================== TEST 5 - DATA STRUCTURES & ALGORITHMS ====================
 export const test5Problems = [
   {
     id: 1,
-    title: "The Treasure Map Mystery",
-    description: `A pirate has a map with treasure locations marked by numbers. He notices that some locations have the same treasure value. Help him find if any two identical treasures are within k steps of each other on the map!
+    title: "Contains Duplicate II",
+    description: `Given an integer array and an integer k, determine if there are two distinct indices i and j such that nums[i] == nums[j] and the absolute difference between i and j is at most k.
 
 Problem Statement:
-Captain Jack has discovered a linear treasure map represented by an array of n integers, where each integer represents the value of treasure at that position. He can only carry treasures that are within k steps of each other (due to limited stamina).
-
-Your task is to determine if there exist two positions with the same treasure value such that the distance between these positions is at most k steps.
+You are given an integer array nums and an integer k. Return true if there exist two indices i and j such that:
+- nums[i] == nums[j]
+- abs(i - j) <= k
 
 Input Format:
-- First line: Two integers n and k (number of positions on map and maximum steps)
-- Second line: n space-separated integers representing treasure values
+- First line: Two integers n and k (array size and maximum distance)
+- Second line: n space-separated integers
 
 Output Format:
-- Print "YES" if Captain Jack can find two identical treasures within k steps
+- Print "YES" if such indices exist
 - Print "NO" otherwise
 
 Constraints:
 - 1 ≤ n ≤ 10^5
 - 0 ≤ k ≤ 10^5
-- -10^9 ≤ treasure values ≤ 10^9
+- -10^9 ≤ array elements ≤ 10^9
 
 Time Limit: 1 second`,
     examples: [
@@ -560,42 +562,42 @@ Time Limit: 1 second`,
         input: `4 3
 1 2 3 1`,
         output: `YES`,
-        explanation: "Treasure value 1 appears at positions 0 and 3, distance = 3 steps (within k=3)"
+        explanation: "nums[0] = nums[3] = 1 and the distance is 3, which is at most k=3"
       },
       {
         input: `4 1
 1 0 1 1`,
         output: `YES`,
-        explanation: "Treasure value 1 appears at positions 2 and 3, distance = 1 step (within k=1)"
+        explanation: "nums[2] = nums[3] = 1 and the distance is 1, which is at most k=1"
       },
       {
         input: `3 2
 1 2 3`,
         output: `NO`,
-        explanation: "No identical treasure values exist on the map"
+        explanation: "No duplicate elements exist in the array"
       }
     ],
   },
   {
     id: 2,
-    title: "The Magical Product Spell",
-    description: `A wizard is creating a powerful potion where each ingredient's power is multiplied by all other ingredients except itself. Help the wizard calculate the final power of each ingredient!
+    title: "Product of Array Except Self",
+    description: `Given an integer array nums, return an array answer such that answer[i] is equal to the product of all elements of nums except nums[i].
 
 Problem Statement:
-The Great Wizard Merlin has n magical ingredients in a row. Each ingredient has a power value. To create the ultimate potion, he needs to calculate the "Product Power" of each ingredient, which is the product of all OTHER ingredients' powers (excluding the current one).
+You are given an integer array nums of length n. Return an array answer where answer[i] is the product of all elements in nums except nums[i].
 
-However, Merlin's ancient rules forbid using division magic! You must calculate the product powers using only multiplication.
+You must solve this problem without using division and in O(n) time.
 
 Input Format:
-- First line: An integer n (number of ingredients)
-- Second line: n space-separated integers representing ingredient powers
+- First line: An integer n (array size)
+- Second line: n space-separated integers
 
 Output Format:
-- Print n space-separated integers, where the i-th integer is the product of all elements except the i-th element
+- Print n space-separated integers representing the result array
 
 Constraints:
 - 2 ≤ n ≤ 10^5
-- -30 ≤ ingredient powers ≤ 30
+- -30 ≤ array elements ≤ 30
 - The product of any prefix or suffix will fit in a 32-bit integer
 
 Time Limit: 1 second`,
@@ -604,46 +606,46 @@ Time Limit: 1 second`,
         input: `4
 1 2 3 4`,
         output: `24 12 8 6`,
-        explanation: "For position 0: 2*3*4=24, position 1: 1*3*4=12, position 2: 1*2*4=8, position 3: 1*2*3=6"
+        explanation: "For index 0: 2*3*4=24, index 1: 1*3*4=12, index 2: 1*2*4=8, index 3: 1*2*3=6"
       },
       {
         input: `5
 -1 1 0 -3 3`,
         output: `0 0 9 0 0`,
-        explanation: "When 0 is included in product, result is 0. For position 2: (-1)*1*(-3)*3=9"
+        explanation: "When 0 is present, all products except at index 2 become 0. At index 2: (-1)*1*(-3)*3=9"
       },
       {
         input: `3
 2 3 4`,
         output: `12 8 6`,
-        explanation: "For position 0: 3*4=12, position 1: 2*4=8, position 2: 2*3=6"
+        explanation: "For index 0: 3*4=12, index 1: 2*4=8, index 2: 2*3=6"
       }
     ],
   },
   {
     id: 3,
-    title: "The Twin Cities Bridge",
-    description: `Two cities are built along parallel rivers. Engineers need to find the optimal meeting point by calculating the median distance. Help them find where to build the bridge!
+    title: "Median of Two Sorted Arrays",
+    description: `Given two sorted arrays nums1 and nums2, return the median of the two sorted arrays.
 
 Problem Statement:
-The Kingdom of Algorithmia has two cities built along two parallel rivers. City A has m buildings and City B has n buildings, both arranged in sorted order by their positions along the rivers.
+You are given two sorted arrays nums1 of size m and nums2 of size n. Find the median of the combined sorted array.
 
-The Royal Engineers want to build a bridge at the "median position" - the middle point when all building positions from both cities are considered together in sorted order.
-
-If the total number of buildings is even, the median is the average of the two middle positions (return as integer division result).
+The median is the middle value in an ordered list:
+- If the total length is odd, return the middle element
+- If the total length is even, return the average of the two middle elements (use integer division)
 
 Input Format:
-- First line: Two integers m and n (number of buildings in City A and City B)
-- Second line: m space-separated integers in sorted order (positions in City A)
-- Third line: n space-separated integers in sorted order (positions in City B)
+- First line: Two integers m and n (sizes of the two arrays)
+- Second line: m space-separated integers in sorted order (nums1)
+- Third line: n space-separated integers in sorted order (nums2)
 
 Output Format:
-- Print a single number representing the median position (use integer division if needed)
+- Print a single integer representing the median (use integer division for even-length arrays)
 
 Constraints:
 - 1 ≤ m, n ≤ 1000
 - Both arrays are sorted in ascending order
-- -10^6 ≤ positions ≤ 10^6
+- -10^6 ≤ array elements ≤ 10^6
 
 Time Limit: 1 second`,
     examples: [
@@ -652,53 +654,51 @@ Time Limit: 1 second`,
 1 3
 2`,
         output: `2`,
-        explanation: "Combined sorted: [1, 2, 3]. Median is the middle element = 2"
+        explanation: "Merged array: [1, 2, 3]. Median is 2"
       },
       {
         input: `2 2
 1 2
 3 4`,
         output: `2`,
-        explanation: "Combined sorted: [1, 2, 3, 4]. Median is (2+3)/2 = 2 (integer division)"
+        explanation: "Merged array: [1, 2, 3, 4]. Median is (2+3)/2 = 2 (integer division)"
       },
       {
         input: `3 3
 1 3 5
 2 4 6`,
         output: `3`,
-        explanation: "Combined sorted: [1, 2, 3, 4, 5, 6]. Median is (3+4)/2 = 3"
+        explanation: "Merged array: [1, 2, 3, 4, 5, 6]. Median is (3+4)/2 = 3"
       }
     ],
   },
   {
     id: 4,
-    title: "The Ticket Counter Queue",
-    description: `A movie theater uses two ticket counters (stacks) to manage their queue system. Help them implement an efficient queue using only these two counters!
+    title: "Implement Queue using Two Stacks",
+    description: `Implement a queue data structure using only two stacks. The implemented queue should support all standard queue operations.
 
 Problem Statement:
-The Grand Cinema has a unique ticketing system with two counters (Counter A and Counter B), where tickets can only be placed on top and removed from top (like a stack of papers).
+Implement a first-in-first-out (FIFO) queue using only two stacks. The implemented queue should support the following operations:
+- Push: Add an element to the rear of the queue
+- Pop: Remove and return the element from the front of the queue
+- Front: Return the element at the front of the queue without removing it
 
-The manager wants to serve customers in First-Come-First-Serve order (like a queue), but can only use these two stack-like counters.
-
-You need to implement a queue system using two stacks that supports these operations:
-- PUSH x: Add customer with ticket number x
-- POP: Remove and serve the front customer (print their ticket number)
-- FRONT: Print the front customer's ticket number without removing them
+You must use only standard stack operations (push to top, pop from top, peek top, size, and is empty).
 
 Input Format:
 - First line: An integer q (number of operations)
 - Next q lines: Each line contains an operation:
-  - "1 x" means PUSH x
-  - "2" means POP
-  - "3" means FRONT
+  - "1 x" means push element x to the queue
+  - "2" means pop the front element
+  - "3" means get the front element
 
 Output Format:
-- For each POP (operation 2) or FRONT (operation 3), print the ticket number on a new line
+- For each pop (operation 2) or front (operation 3), print the element on a new line
 
 Constraints:
 - 1 ≤ q ≤ 10^5
 - 1 ≤ x ≤ 10^9
-- POP and FRONT will only be called when queue is not empty
+- Pop and Front operations will only be called when the queue is not empty
 
 Time Limit: 1 second`,
     examples: [
@@ -713,7 +713,7 @@ Time Limit: 1 second`,
         output: `10
 10
 20`,
-        explanation: "PUSH 10, PUSH 20, PUSH 30, FRONT shows 10, POP removes 10, FRONT shows 20"
+        explanation: "Push 10, 20, 30. Front returns 10. Pop removes 10. Front returns 20"
       },
       {
         input: `8
@@ -729,32 +729,30 @@ Time Limit: 1 second`,
 15
 15
 25`,
-        explanation: "After operations, the queue maintains FIFO order using two stacks"
+        explanation: "Queue maintains FIFO order throughout all operations"
       }
     ],
   },
   {
     id: 5,
-    title: "The Skyline Building Challenge",
-    description: `A city planner is analyzing a row of buildings represented as bars in a histogram. Find the largest rectangular billboard that can be placed within these buildings!
+    title: "Largest Rectangle in Histogram",
+    description: `Given an array of integers representing the histogram's bar heights where the width of each bar is 1, return the area of the largest rectangle in the histogram.
 
 Problem Statement:
-The Mayor of Techville wants to place a massive rectangular billboard in the city. The city has n buildings in a row, each with a specific height forming a histogram.
+You are given an array heights of length n where heights[i] represents the height of a bar in a histogram. All bars have a width of 1.
 
-The billboard must be rectangular and fit completely within the histogram (it cannot go above any building it overlaps with). The Mayor wants to maximize the area of the billboard.
-
-Your task is to find the area of the largest rectangle that can be formed within the histogram.
+Find the area of the largest rectangle that can be formed within the histogram. The rectangle must be formed by consecutive bars and cannot exceed any bar's height that it spans.
 
 Input Format:
-- First line: An integer n (number of buildings)
-- Second line: n space-separated integers representing building heights
+- First line: An integer n (number of bars)
+- Second line: n space-separated integers representing bar heights
 
 Output Format:
-- Print a single integer: the maximum rectangular area possible
+- Print a single integer: the maximum rectangular area
 
 Constraints:
 - 1 ≤ n ≤ 10^5
-- 0 ≤ building heights ≤ 10^4
+- 0 ≤ bar heights ≤ 10^4
 
 Time Limit: 1 second`,
     examples: [
@@ -762,25 +760,25 @@ Time Limit: 1 second`,
         input: `6
 2 1 5 6 2 3`,
         output: `10`,
-        explanation: "The largest rectangle has area 10 (width=2, height=5, formed by buildings at positions 2 and 3)"
+        explanation: "The largest rectangle has area 10 (width=2, height=5, at indices 2-3)"
       },
       {
         input: `7
 6 2 5 4 5 1 6`,
         output: `12`,
-        explanation: "The largest rectangle has area 12 (width=4, height=3, can be formed in the middle)"
+        explanation: "The largest rectangle has area 12 (can be formed with height 3 spanning 4 bars)"
       },
       {
         input: `4
 2 4 3 1`,
         output: `6`,
-        explanation: "The largest rectangle has area 6 (width=2, height=3, formed by positions 1 and 2)"
+        explanation: "The largest rectangle has area 6 (width=2, height=3, at indices 1-2)"
       },
       {
         input: `1
 5`,
         output: `5`,
-        explanation: "Only one building with height 5, so maximum area is 5"
+        explanation: "Single bar with height 5, maximum area is 5"
       }
     ],
   },
@@ -792,5 +790,5 @@ export const allTests = {
   2: test2Problems,
   3: test3Problems,
   4: test4Problems,
-  5:test5Problems
+  5: test5Problems
 };
