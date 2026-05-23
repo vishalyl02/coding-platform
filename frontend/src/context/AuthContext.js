@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     console.log("⏳ Fetching user data from backend...");
     
     try {
-      const url = `https://liable-beside-ethnic-selective.trycloudflare.com/auth/me/${userId}`;
+      const url = `https://polished-excessive-magnetic-judicial.trycloudflare.com/auth/me/${userId}`;
       console.log("📡 Fetching from:", url);
       
       const res = await fetch(url);

@@ -9,7 +9,7 @@ function TestsLanding() {
   const { user } = useContext(AuthContext);
   const [selectedTest, setSelectedTest] = useState(null); // For leaderboard modal
   const [solvedProblems, setSolvedProblems] = useState({});
-  const API_URL = "https://liable-beside-ethnic-selective.trycloudflare.com";
+  const API_URL = "https://polished-excessive-magnetic-judicial.trycloudflare.com";
 
   const tests = [
     {

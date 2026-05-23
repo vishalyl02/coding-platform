@@ -23,7 +23,7 @@ function Login() {
     setIsLoading(true);
 
     try {
-      const res = await fetch('https://liable-beside-ethnic-selective.trycloudflare.com/auth/login', {
+      const res = await fetch('https://polished-excessive-magnetic-judicial.trycloudflare.com/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),

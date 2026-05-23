@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CodeEditor from "./CodeEditor";
 import TestCaseTabs from "./TestCaseTabs";
 
-const API_URL = "https://liable-beside-ethnic-selective.trycloudflare.com";
+const API_URL = "https://polished-excessive-magnetic-judicial.trycloudflare.com";
 
 function IDEPanel({
   code,
@@ -24,7 +24,7 @@ function IDEPanel({
   const [testResults, setTestResults] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [backendTestCases, setBackendTestCases] = useState([]);
- // const [totalTestCount, setTotalTestCount] = useState(0); // 🔥 Track total test count
+ const [totalTestCount, setTotalTestCount] = useState(0); // 🔥 Track total test count
 
   const LANGUAGE_OPTIONS = [
     { value: 'cpp', label: 'C++' },

@@ -4,7 +4,7 @@ import "./Leaderboard.css"; // Reuse existing CSS
 function TestLeaderboardModal({ testId, testName, onClose }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const API_URL = "https://liable-beside-ethnic-selective.trycloudflare.com";
+  const API_URL = "https://polished-excessive-magnetic-judicial.trycloudflare.com";
 
   useEffect(() => {
     if (!testId) return;
