@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/home/Desktop/web-app/learn/backend/data",
-      "program": "/Users/home/Desktop/web-app/learn/backend/data/build/Debug/outDebug"
+      "cwd": "/Users/home/Desktop/web-app/learn/backend",
+      "program": "/Users/home/Desktop/web-app/learn/backend/build/Debug/outDebug"
     }
   ]
 }
