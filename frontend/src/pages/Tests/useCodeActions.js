@@ -99,6 +99,7 @@ export function useCodeActions(userId, activeProblem, testStarted, testSubmitted
     };
 
     fetchSavedCode();
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeProblem, userId, testId]); // Intentionally not including 'language'
 
   /* ==================== RUN CODE ==================== */

@@ -24,6 +24,7 @@ function IDEPanel({
   const [testResults, setTestResults] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [backendTestCases, setBackendTestCases] = useState([]);
+// eslint-disable-next-line no-unused-vars
  const [totalTestCount, setTotalTestCount] = useState(0); // 🔥 Track total test count
 
   const LANGUAGE_OPTIONS = [
