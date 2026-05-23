@@ -24,7 +24,7 @@ function IDEPanel({
   const [testResults, setTestResults] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [backendTestCases, setBackendTestCases] = useState([]);
-  const [totalTestCount, setTotalTestCount] = useState(0); // 🔥 Track total test count
+ // const [totalTestCount, setTotalTestCount] = useState(0); // 🔥 Track total test count
 
   const LANGUAGE_OPTIONS = [
     { value: 'cpp', label: 'C++' },

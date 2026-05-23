@@ -7,7 +7,7 @@ const QuizApp = () => {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
-  const [showResults, setShowResults] = useState(false);
+  // const [showResults, setShowResults] = useState(false);
 
   // Quiz Structure
   const quizData = {
